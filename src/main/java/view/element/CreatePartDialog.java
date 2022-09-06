@@ -13,7 +13,6 @@ import Inventree.item.StockItem;
 import Inventree.item.StockLocation;
 import controller.CreatePartController;
 import data.UTILS;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -31,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+
 
 /**
  *
@@ -88,9 +88,13 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         status = UTILS.checkTextField(nameTxt);
         if(!UTILS.checkTextField(descTxt))
             status = false;
-        if(!UTILS.checkTextField(supplyerSKU))
-            status = false;
+        
         if(!UTILS.checkTextField(manufMPN))
+            status = false;
+        if(!UTILS.checkComboBox(manufacturerCB))
+                status = false;
+        /*
+        if(!UTILS.checkTextField(supplyerSKU))
             status = false;
         if(!UTILS.checkComboBox(supplyerCB)){
             if(!UTILS.checkComboBox(manufacturerCB)){
@@ -100,7 +104,7 @@ public class CreatePartDialog extends JDialog implements ActionListener{
             }
          }else{
             manufacturerCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        }
+        }*/
         
         if(!status){
             JOptionPane.showMessageDialog(this, "Some Required Information are missing");
@@ -213,15 +217,14 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         jp.add(new JLabel("Minimum Amount"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Set as Template"), cst);
-        //cst.gridy = (i+=2);
-        //jp.add(new JLabel("Supplier"), cst);
-        //cst.gridy = (i+=2);
-        //jp.add(new JLabel("Supplier Id (set as barcode)"), cst);
+        cst.gridy = (i+=2);
+        jp.add(new JLabel("Supplier"), cst);
+        cst.gridy = (i+=2);
+        jp.add(new JLabel("Supplier part ref"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer Id (set as barcode)"), cst);
-        cst.gridy = (i+=2);
         
         cst.anchor = GridBagConstraints.WEST;
         i=0;
@@ -242,10 +245,10 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         jp.add(minNum, cst);
         cst.gridy = (i+=2);
         jp.add(isTemplateCB, cst);
-        //cst.gridy = (i+=2);
-        //jp.add(supplyerCB, cst);
-        //cst.gridy = (i+=2);
-        //jp.add(supplyerSKU, cst);
+        cst.gridy = (i+=2);
+        jp.add(supplyerCB, cst);
+        cst.gridy = (i+=2);
+        jp.add(supplyerSKU, cst);
         cst.gridy = (i+=2);
         jp.add(manufacturerCB, cst);
         cst.gridy = (i+=2);

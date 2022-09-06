@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import static java.time.temporal.TemporalQueries.localDate;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;

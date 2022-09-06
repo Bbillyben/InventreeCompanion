@@ -4,35 +4,27 @@
  */
 package view.element;
 
-import Inventree.item.Category;
 import Inventree.item.CompanyItem;
 import Inventree.item.InventreeItem;
 import Inventree.item.InventreeLists;
 import Inventree.item.PartItem;
 import Inventree.item.StockItem;
-import Inventree.item.StockLocation;
 import controller.CreatePartController;
 import data.UTILS;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -68,9 +60,12 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         boolean status = true;
         if(!UTILS.checkComboBox(subPartCB))
             status = false;
-        if(!UTILS.checkTextField(supplyerSKU))
-            status = false;
+        if(!UTILS.checkComboBox(manufacturerCB))
+                status = false;
         if(!UTILS.checkTextField(manufMPN))
+            status = false;
+        /*
+        if(!UTILS.checkTextField(supplyerSKU))
             status = false;
         if(!UTILS.checkComboBox(supplyerCB)){
             if(!UTILS.checkComboBox(manufacturerCB)){
@@ -80,7 +75,7 @@ public class LinkPartDialog extends JDialog implements ActionListener{
             }
          }else{
             manufacturerCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        }
+        }*/
         
         if(!status){
             JOptionPane.showMessageDialog(this, "Some Required Information are missing");
@@ -147,10 +142,10 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         cst.gridx = 0;
         cst.gridy = 0;
         jp.add(new JLabel("Part to Link"), cst);
-        //cst.gridy = (i+=2);
-        //jp.add(new JLabel("Supplier"), cst);
-        //cst.gridy = (i+=2);
-        //jp.add(new JLabel("Supplier Id (set as barcode)"), cst);
+        cst.gridy = (i+=2);
+        jp.add(new JLabel("Supplier"), cst);
+        cst.gridy = (i+=2);
+        jp.add(new JLabel("Supplier Id (set as barcode)"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer"), cst);
         cst.gridy = (i+=2);
@@ -162,10 +157,10 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         cst.gridx=1;
         cst.gridy=i;
         jp.add(subPartCB, cst);
-        //cst.gridy = (i+=2);
-        //jp.add(supplyerCB, cst);
-        //cst.gridy = (i+=2);
-        //jp.add(supplyerSKU, cst);
+        cst.gridy = (i+=2);
+        jp.add(supplyerCB, cst);
+        cst.gridy = (i+=2);
+        jp.add(supplyerSKU, cst);
         cst.gridy = (i+=2);
         jp.add(manufacturerCB, cst);
         cst.gridy = (i+=2);

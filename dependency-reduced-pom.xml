@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ben.inventreecompanion</groupId>
   <artifactId>InventreeCompanion</artifactId>
-  <version>RC_0.1</version>
+  <version>beta_0.1</version>
   <build>
     <plugins>
       <plugin>
