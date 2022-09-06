@@ -6,3 +6,6 @@ Purpose : Use an hand scanner to decode [EAN-128/GS1-128](https://en.wikipedia.o
 It will add a temporization between 2 scan decoding.
 
 other barcodeDecoder could bee added (extends https://github.com/Bbillyben/InventreeCompanion/blob/main/src/main/java/barcodeDecoder/BarcodeDecoder.java)
+
+
+Barcode are referenced in a Manufacturer entry (via MPN).
