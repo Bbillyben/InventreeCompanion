@@ -40,6 +40,9 @@ public class ActionRenderer extends JPanel implements TableCellRenderer {
           case CONSTANT.MODE_REMOVE:
               col = Color.RED;
               break;
+          case CONSTANT.MODE_TRANSFERT:
+              col = Color.MAGENTA;
+              break;
            case CONSTANT.STATUS_DELETED:
               col = Color.DARK_GRAY;
               break;

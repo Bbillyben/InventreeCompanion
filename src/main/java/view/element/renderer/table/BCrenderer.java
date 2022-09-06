@@ -16,6 +16,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class BCrenderer extends JLabel implements TableCellRenderer {
     public BCrenderer(){
+        this.setOpaque(true);
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setVerticalAlignment(SwingConstants.CENTER);
     }

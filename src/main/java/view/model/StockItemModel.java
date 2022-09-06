@@ -64,6 +64,8 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
             return false;
         if(columnEdit == null)
             return false;
+        if(!sit.action.equals(CONSTANT.MODE_TRANSFERT) && columnNames[column].equals("transfert location"))
+             return false;
         
         return columnEdit.contains(columnNames[column]);
     }

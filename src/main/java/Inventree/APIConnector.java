@@ -17,8 +17,6 @@ import events.iEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.naming.AuthenticationException;
 import listeners.ListenerI;
@@ -180,9 +178,9 @@ public class APIConnector implements ListenerI{
             pi = new PartItem();           
             pi.setId(obj.getInt("pk"));
             pi.setName(obj.getString("name"));
-            if(obj.has("IPN") && String.valueOf(obj.get("IPN")) != "null" && String.valueOf(obj.get("IPN")) != "")
+            if(obj.has("IPN") && String.valueOf(obj.get("IPN")) != "null")
                 pi.IPN= String.valueOf(obj.get("IPN"));
-            if(obj.has("variant_of") && String.valueOf(obj.get("variant_of")) != "null" && String.valueOf(obj.get("variant_of")) != "")
+            if(obj.has("variant_of") && String.valueOf(obj.get("variant_of")) != "null")
                 pi.partTemplate= obj.getInt("variant_of");
             pi.isTemplate = obj.getBoolean("is_template");
             ptt.add(pi);
@@ -351,14 +349,16 @@ public class APIConnector implements ListenerI{
         
         
          try {
-           // test Supplier
-           m.put("SKU", si.EAN);
-           jso = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
+            // test manufacturer
+            m.put("MPN", si.EAN);
+            jso = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
            // test manufacturer
            if(jso.length() == 0){
                m.clear();
-               m.put("MPN", si.EAN);
-               jso = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
+               // test Supplier
+                m.put("SKU", si.EAN);
+                jso = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
+              
            }
                
         } catch (AuthenticationException ex) {
@@ -488,7 +488,6 @@ public class APIConnector implements ListenerI{
         JSONArray jso;
         JSONObject obj;
         try {
-           // test Supplier
            jso = InventreeAPI.getStockLocation(cleanURL(invURL), apiKey, si.stocklocation.getId());
           
         } catch (AuthenticationException ex) {
@@ -566,13 +565,24 @@ public class APIConnector implements ListenerI{
     private boolean sendUpdateStock(StockItem si){
        HashMap m = new HashMap();
         m.put(si.getId(), si.quantity);
-        int status;
+        int status = 0;
         try {
-           if(CONSTANT.MODE_ADD.equals(si.action)){
+           switch(si.action){
+               case CONSTANT.MODE_ADD:
+                   status = InventreeAPI.addToStockItem(cleanURL(invURL), apiKey, m);
+                   break;
+               case CONSTANT.MODE_REMOVE:
+                   status = InventreeAPI.removeToStockItem(cleanURL(invURL), apiKey, m);
+                   break;
+               case CONSTANT.MODE_TRANSFERT:
+                   status = InventreeAPI.transfertItemToStock(cleanURL(invURL), apiKey, createTransfertItemJSON(si));
+                   break;
+           }
+           /*if(CONSTANT.MODE_ADD.equals(si.action)){
                status = InventreeAPI.addToStockItem(cleanURL(invURL), apiKey, m);
            }else{
                status = InventreeAPI.removeToStockItem(cleanURL(invURL), apiKey, m);
-           }
+           }*/
            return InventreeAPI.check(status);
       
         } catch (AuthenticationException ex) {
@@ -649,6 +659,22 @@ public class APIConnector implements ListenerI{
         if(si.expiry_date !=null)
             jso.put("expiry_date", si.expiry_date.toString());
        
+        
+        return jso;
+    }
+    
+    public JSONObject createTransfertItemJSON(StockItem si){
+        
+        JSONObject jso = new JSONObject();
+        JSONObject item = new JSONObject();
+        JSONArray items = new JSONArray();
+        
+        
+        item.put("pk", si.getId());
+        item.put("quantity", si.quantity);
+        items.put(item);
+        jso.put("items", items);
+        jso.put("location", si.transfertLocation.getId());      
         
         return jso;
     }

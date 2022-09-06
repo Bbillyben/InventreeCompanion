@@ -84,7 +84,8 @@ public class CONSTANT {
     
     public static final String STATUS_ERR_NO_ITEM_REMOVE = "Err: no item to remove";// si action remove et pas d'item stock identifié
     public static final String STATUS_ERR_QUANTITY = "Err: Stock quantity insufficient";//si action remove et que quantité stock < quantité demandé
-    
+    public static final String STATUS_ERR_SAME_LOC = "Err: location identical";//si action transfert et même location selectionées
+    public static final String STATUS_ERR_LOC = "Err: No Location defined";// si un stocklocation n'est pas défini 
     
     public static final String SENDABLE = "sendable_item"; // utilisé pour tout les items qui sont envoyable au server, a utiliser avec le Set SENDABLE_STATUS
     
@@ -95,7 +96,9 @@ public class CONSTANT {
         STATUS_ITEM_FOUND,
         STATUS_ON_UPDATE,
         STATUS_ERR_NO_ITEM_REMOVE,
-        STATUS_ERR_QUANTITY
+        STATUS_ERR_QUANTITY,
+        STATUS_ERR_SAME_LOC,
+        STATUS_ERR_LOC
     );
     public static final Set<String> SENDABLE_STATUS = Set.of(
         STATUS_ITEM_FOUND,
@@ -105,7 +108,9 @@ public class CONSTANT {
         STATUS_ERROR_EAN,
         STATUS_SEND_ERROR,
         STATUS_ERR_NO_ITEM_REMOVE,
-        STATUS_ERR_QUANTITY
+        STATUS_ERR_QUANTITY,
+        STATUS_ERR_SAME_LOC,
+        STATUS_ERR_LOC
     );
     public static final Set<String> DELETED_REMOVE_STATUS= Set.of(
         STATUS_DELETED,
@@ -114,7 +119,9 @@ public class CONSTANT {
         STATUS_ERROR_EAN,
         STATUS_SEND_ERROR,
         STATUS_ERR_NO_ITEM_REMOVE,
-        STATUS_ERR_QUANTITY
+        STATUS_ERR_QUANTITY,
+        STATUS_ERR_SAME_LOC,
+        STATUS_ERR_LOC
     );
     // =================  CONNECTION  ================  //
     // ===============================================  //
@@ -132,7 +139,7 @@ public class CONSTANT {
     // pendant le scan
     public static final String MODE_ADD = "add";
     public static final String MODE_REMOVE = "remove";
-    
+    public static final String MODE_TRANSFERT = "transfert";
      // =================  FILES  ================  //
     // ===============================================  //
     public static final String FILE_SAVE = "currentList.ser";
@@ -146,16 +153,16 @@ public class CONSTANT {
     // --------------- table de scan
     public static final String[] TAB_COL_SCAN =  new String[] {
         "Barcode", "EAN","batch","Expiry Date","Name", 
-        "location", "IPN",
+        "location", "transfert location", "IPN",
         "quantity in stock", "quantity", "action", "status",
         "remove"
     };
     public static final Set<String> TAB_COL_SCAN_EDIT =  Set.of(
-           "batch","Expiry Date","location", "remove","quantity"
+           "batch","Expiry Date","location","transfert location", "remove","quantity"
     );
     public static final Class[] TAB_COL_SCAN_CLASS =  new Class[] {
         String.class,String.class, String.class,LocalDate.class, String.class, 
-        StockLocation.class, String.class,
+        StockLocation.class,StockLocation.class, String.class,
          Integer.class, Integer.class, String.class, String.class,
          JButton.class
     };
@@ -163,7 +170,7 @@ public class CONSTANT {
     // --------------- table de SEND - update 
     
     public static final Set<String> TAB_COL_UPDATE_EDIT =  Set.of(
-           "location","remove", "quantity"
+           "location","transfert location","remove", "quantity"
     );
     // --------------- table de SEND - Add item 
     public static final String[] TAB_COL_ITEM =  new String[] {

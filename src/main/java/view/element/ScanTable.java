@@ -14,7 +14,6 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.time.LocalDate;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -42,6 +41,7 @@ import view.element.renderer.table.CompanyItemTableEditor;
 import view.element.renderer.table.CompanyItemTableRenderer;
 import view.element.renderer.table.DateTableEditor;
 import view.element.renderer.table.IntegerEditor;
+import view.element.renderer.table.StatusRenderer;
 import view.element.renderer.table.StockLocationTableEditor;
 import view.element.renderer.table.StockLocationTableRenderer;
 /**
@@ -113,6 +113,7 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
         
         this.setDefaultEditor(Integer.class, new IntegerEditor());
         
+        
         if(this.columnExists("Supplier")){
             this.getColumn("Supplier").setCellRenderer(new CompanyItemTableRenderer());
             this.getColumn("Supplier").setCellEditor(new CompanyItemTableEditor(ivl.suppliers));
@@ -152,6 +153,9 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
        if(this.columnExists("Barcode")){
             this.getColumn("Barcode").setPreferredWidth(15);
             this.getColumn("Barcode").setCellRenderer(new BCrenderer());
+        }
+       if(this.columnExists("status")){
+            this.getColumn("status").setCellRenderer(new StatusRenderer());
         }
         
         

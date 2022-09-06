@@ -56,11 +56,14 @@ public class ScanView extends JPanel
     
     JRadioButton purchaseBtn;
     JRadioButton consumeBtn;
+    JRadioButton transfertBtn;
     JPanel btnPan;
     JTextField bcTxt;
     ScanTable bcTable;
     DefaultTableModel tableModel;
     InventreeItemFilterCB stockList;
+    InventreeItemFilterCB trsfStockList;
+    JLabel TrsfLoc;
     ButtonGroup group;
     
     // pour écoute des key
@@ -111,12 +114,15 @@ public class ScanView extends JPanel
         purchaseBtn.setActionCommand(CONSTANT.MODE_ADD);
         consumeBtn = new JRadioButton(CONSTANT.MODE_REMOVE);
         consumeBtn.setActionCommand(CONSTANT.MODE_REMOVE);
-        
+        transfertBtn= new JRadioButton(CONSTANT.MODE_TRANSFERT);
+        transfertBtn.setActionCommand(CONSTANT.MODE_TRANSFERT);
         purchaseBtn.setOpaque(false);
         consumeBtn.setOpaque(false);
+        transfertBtn.setOpaque(false);
         
         group.add(purchaseBtn);
         group.add(consumeBtn);
+        group.add(transfertBtn);
         
         
         // Conteneur du panneau params
@@ -129,15 +135,32 @@ public class ScanView extends JPanel
         btnPan.add(purchaseBtn, constraints);//, BorderLayout.CENTER);
         constraints.gridx = 1;
         btnPan.add(consumeBtn, constraints);//, BorderLayout.CENTER);
-         
+        constraints.gridx = 2;
+        btnPan.add(transfertBtn, constraints);
         
         // pour la selection des location
-        JPanel listCont = new JPanel();
+        JPanel listCont = new JPanel(new GridBagLayout());
+        
+        JLabel destLoc = new JLabel("Location :");
         stockList = new InventreeItemFilterCB();
         stockList.setActionCommand("stocklistchange");
-        listCont.add (stockList);
-
+        TrsfLoc = new JLabel("Transfert Location :");
+        trsfStockList= new InventreeItemFilterCB();
         
+        GridBagConstraints gbdL = new GridBagConstraints();
+        gbdL.insets = new Insets(1, 10, 1, 10);
+        gbdL.anchor = GridBagConstraints.NORTH;
+        gbdL.gridy=0;
+        gbdL.gridx=0;
+        listCont.add (destLoc, gbdL);
+        gbdL.gridx=1;
+        listCont.add(stockList, gbdL);
+        gbdL.gridy=1;
+        gbdL.gridx=0;
+        listCont.add (TrsfLoc, gbdL);
+        gbdL.gridx=1;
+        listCont.add(trsfStockList, gbdL);
+       
         
         paramCont.add(btnPan);//, BorderLayout.LINE_START);
         paramCont.add(listCont);//, BorderLayout.LINE_END);
@@ -184,6 +207,7 @@ public class ScanView extends JPanel
         // les listener
         purchaseBtn.addActionListener(this);
         consumeBtn.addActionListener(this);
+        transfertBtn.addActionListener(this);
         //stockList.addActionListener(this);
         
         khm = new KeyHandlerManager();
@@ -209,14 +233,22 @@ public class ScanView extends JPanel
                 purchaseBtn.setSelected(true);
                 currentStatus = CONSTANT.MODE_ADD;
                 break;
+            case CONSTANT.MODE_TRANSFERT: // transfert
+                btnPan.setBackground(Color.MAGENTA);
+                transfertBtn.setSelected(true);
+                currentStatus = CONSTANT.MODE_TRANSFERT;
+                break;
             default:
                 btnPan.setBackground(null);
                 consumeBtn.setSelected(false);
                 purchaseBtn.setSelected(false);
-                currentStatus = null;
-
-                            
+                currentStatus = null;                 
         }
+        setVisibleSourceList(scanmode.equals(CONSTANT.MODE_TRANSFERT));
+    }
+    private void setVisibleSourceList(boolean state){
+        TrsfLoc.setVisible(state);
+        trsfStockList.setVisible(state);
     }
     
    
@@ -237,6 +269,7 @@ public class ScanView extends JPanel
         stockList.removeAllItems();
         for(StockLocation sl : ivl.stocklocation){
             stockList.addItem(sl);
+            trsfStockList.addItem(sl);
         }
         bcTable.initialisation(ivl);
         this.stockList.setSelectedId(stockLoc);
@@ -267,7 +300,7 @@ public class ScanView extends JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
-            case CONSTANT.MODE_ADD, CONSTANT.MODE_REMOVE:
+            case CONSTANT.MODE_ADD, CONSTANT.MODE_REMOVE,CONSTANT.MODE_TRANSFERT:
                 controller.changeStatus(e.getActionCommand());
             break;
             case "stocklistchange":
@@ -289,6 +322,8 @@ public class ScanView extends JPanel
         si.stocklocation =(StockLocation) stockList.getSelectedItem();
         si.quantity = 1;
         si.action = group.getSelection().getActionCommand();
+        if(si.action.equals(CONSTANT.MODE_TRANSFERT))
+            si.transfertLocation = (StockLocation) trsfStockList.getSelectedItem();
         //System.out.println(this+" in loc : "+si.stocklocation);
         controller.addStockItem(e.stockitem);
         //System.out.println(this+ " Barcode Event : \n"+e);

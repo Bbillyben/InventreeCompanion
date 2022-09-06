@@ -33,5 +33,22 @@ public class ItemCheck {
             si.setStatus(CONSTANT.STATUS_ERR_QUANTITY);
             return;
         }
+        
+        // spécifique transfert
+        if(CONSTANT.MODE_TRANSFERT.equals(si.action))
+            if(checkTransfert(si))
+                return;
+        
+    }
+    private static boolean checkTransfert(StockItem si){
+        if(si.stocklocation == null || si.transfertLocation == null){
+            si.setStatus(CONSTANT.STATUS_ERR_LOC);
+            return true;
+        }        
+        if(si.stocklocation.getId()==si.transfertLocation.getId()){
+            si.setStatus(CONSTANT.STATUS_ERR_SAME_LOC);
+            return true;
+        }
+        return false;
     }
 }

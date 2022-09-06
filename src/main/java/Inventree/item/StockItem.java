@@ -27,6 +27,7 @@ public class StockItem extends InventreeItem {
     
     // location
     public StockLocation stocklocation;
+    public StockLocation transfertLocation;
     
     // barcode
     public barcode barcode;
@@ -91,6 +92,10 @@ public class StockItem extends InventreeItem {
                 if(stocklocation!=null)
                     return type.cast(stocklocation);
                 break;
+            case "TRANSFERT LOCATION":
+                //if(transfertLocation!=null)
+                    return type.cast(transfertLocation);
+                //break;
             case "QUANTITY IN STOCK":
                 return type.cast(quantityInStock);
             case "QUANTITY":
@@ -145,6 +150,9 @@ public class StockItem extends InventreeItem {
             case "LOCATION":
                 //if(stocklocation!=null)
                     stocklocation = (StockLocation) value;
+                break;
+            case "TRANSFERT LOCATION":
+                 transfertLocation = (StockLocation) value;
                 break;
             case "QUANTITY IN STOCK":
                 quantityInStock =  (int) value;

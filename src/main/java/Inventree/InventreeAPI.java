@@ -93,7 +93,7 @@ public class InventreeAPI {
         
     }
      
-     /**Add a quantity to a specific StockItem
+     /**Add a quantity to a specific StockItem (update a current stock item)
       * 
       * API : /api/stock/add/
       * 
@@ -142,6 +142,22 @@ public class InventreeAPI {
         int status = response.status();
         return check(status) ? status :  null;
          
+     }
+     
+     /** Transfert  an item to stock from part item list
+      * 
+      * @param invUrl
+      * @param token
+      * @param data : formated JSON of part transfert
+      * @return
+      * @throws AuthenticationException
+      * @throws IOException 
+      */
+     public static int transfertItemToStock(String invUrl, String token, JSONObject data) throws AuthenticationException, IOException{
+        Request re = buildQuery(invUrl, "/api/stock/transfer/", METHOD_POST,  "Token "+token, data);             
+        Response response =re.fetch();
+        int status = response.status();
+        return check(status) ? status :  null;
      }
     
     /* =================================================================== */

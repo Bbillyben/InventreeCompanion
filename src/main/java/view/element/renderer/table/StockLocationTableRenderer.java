@@ -29,8 +29,12 @@ public class StockLocationTableRenderer extends JLabel implements TableCellRende
         //System.out.println(this.getClass()+"  --- add "+value);
         
         //this.setSelectedItem(value);
-        if(value != null)
+        if(value != null){
             this.setText(((StockLocation) value).getName());
+        }else{
+            this.setText("---");
+        }
+            
         return this;
     }
     
