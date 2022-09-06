@@ -42,6 +42,7 @@ public class BasicBarcode extends BarcodeDecoder {
     public void processStockItem(StockItem si) {
         si.barcode = getBarcode(); 
         si.EAN = getBarcode().EAN; 
+        si.quantity = 1;
     }
     
 }

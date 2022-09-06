@@ -29,7 +29,8 @@ public class EAN128Decoder extends BarcodeDecoder {
     public List<String> unknownAI;
     
     private final Map<String, String> data = Maps.newHashMap();
-
+    
+    protected boolean useBCQuantity=false;
     
     
     
@@ -188,11 +189,17 @@ public class EAN128Decoder extends BarcodeDecoder {
     
     @Override
     public void decodeBarcode(String s){
-        this.initDecode();
+        //this.initDecode();
+        this.decodeComplex(s, defaultBreak);
+    }
+    @Override
+    public void decodeBarcode(String s, boolean useQ){
+        useBCQuantity = useQ;
+        //this.initDecode();
         this.decodeComplex(s, defaultBreak);
     }
     public void decodeBarcode(String s, char fnc1){
-        this.initDecode();
+        //this.initDecode();
         this.decodeComplex(s, fnc1);
     }
     @Override
@@ -206,10 +213,17 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     @Override
     public void processStockItem(StockItem si) {
+        
         si.barcode = getBarcode();
         si.batch = getFristAI(equivSearch.get("batch"));
         si.expiry_date = transformDateStr(getFristAI(equivSearch.get("ExpiryDate")));
         si.EAN = si.barcode.EAN;
+        if(useBCQuantity==true && getFristAI(equivSearch.get("amount"))!=null){
+            si.quantity=Integer.valueOf(getFristAI(equivSearch.get("amount")));
+        }else{
+            si.quantity=1;
+        }
+            
     }
     
     
@@ -251,38 +265,35 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     
     protected void decodeBC(String s, char fnc1){
-    //System.out.println(" Trying to decode :" + s);
-    /*boolean is128BC = (s.toUpperCase().indexOf(startCode) == 0);
-    if(!is128BC){
-    throw new IllegalArgumentException("This is not a EAN-128 barcode");
-    }*/
-    s = s.replaceFirst("(?i)" + startCode, "");
-    //System.out.println(" decode of :" + s);
-    StringBuilder ai = new StringBuilder();
-    int index = 0;
-    while (index < s.length()) {
-      ai.append(s.charAt(index++));
-      AII info = aiinfo.get(ai.toString());
-      if (info != null) {
-        StringBuilder value = new StringBuilder();
-        for (int i = 0; i < info.maxLength && index < s.length(); i++) {
-          char c = s.charAt(index++);
-          if (c == fnc1) {
-            break;
+        //System.out.println(" Trying to decode :" + s);
+
+        s = s.replaceFirst("(?i)" + startCode, "");
+        //System.out.println(" decode of :" + s);
+        StringBuilder ai = new StringBuilder();
+        int index = 0;
+        while (index < s.length()) {
+          ai.append(s.charAt(index++));
+          AII info = aiinfo.get(ai.toString());
+          if (info != null) {
+            StringBuilder value = new StringBuilder();
+            for (int i = 0; i < info.maxLength && index < s.length(); i++) {
+              char c = s.charAt(index++);
+              if (c == fnc1) {
+                break;
+              }
+              value.append(c);
+            }
+            if (value.length() < info.minLength) {
+              throw new IllegalArgumentException("Short field for AI \"" + ai + "\": \"" + value + "\".");
+            }
+            data.put(ai.toString(), value.toString());
+            ai.setLength(0);
           }
-          value.append(c);
         }
-        if (value.length() < info.minLength) {
-          throw new IllegalArgumentException("Short field for AI \"" + ai + "\": \"" + value + "\".");
+        if (ai.length() > 0) {
+            unknownAI.add(ai.toString());
         }
-        data.put(ai.toString(), value.toString());
-        ai.setLength(0);
       }
-    }
-    if (ai.length() > 0) {
-        unknownAI.add(ai.toString());
-    }
-  }
 
     
     private void initDecode(){

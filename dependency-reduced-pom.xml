@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ben.inventreecompanion</groupId>
   <artifactId>InventreeCompanion</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>RC_0.1</version>
   <build>
     <plugins>
       <plugin>
@@ -29,6 +29,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>copy-dependencies</id>
@@ -43,12 +44,6 @@
               <overWriteIfNewer>true</overWriteIfNewer>
             </configuration>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
           <execution>
             <id>build-classpath</id>
             <phase>generate-sources</phase>

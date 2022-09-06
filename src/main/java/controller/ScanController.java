@@ -48,6 +48,9 @@ public class ScanController extends iController implements NavigationListener {
         model.changeLocationSelection(newLoc);
         
     }
+    public void changeUseQuantity(boolean usq){
+        model.changeUseQuantity(usq);
+    }
     
     
     public void copyValue(String copyValue){

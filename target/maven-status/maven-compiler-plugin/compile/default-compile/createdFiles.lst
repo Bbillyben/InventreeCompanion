@@ -59,6 +59,7 @@ view\element\renderer\table\ButtonEditor_add.class
 listeners\NavigationListener.class
 view\element\renderer\table\CompanyItemTableEditor.class
 listeners\ParamListener.class
+view\element\renderer\table\StatusRenderer.class
 barcodeDecoder\BarcodeDecoder.class
 listeners\keyBarcodeListener.class
 listeners\ListenerI.class

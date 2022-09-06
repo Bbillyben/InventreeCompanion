@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ben.inventreecompanion</groupId>
     <artifactId>InventreeCompanion</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>RC_0.1</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -33,6 +33,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <version>3.3.0</version>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                         <execution>
@@ -48,23 +49,16 @@
                                         <overWriteIfNewer>true</overWriteIfNewer>
                                 </configuration>
                         </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                  <execution>
-                    <id>build-classpath</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                      <goal>build-classpath</goal>
-                    </goals>
-                    <configuration>
-                      <!-- configure the plugin here -->
-                    </configuration>
-                  </execution>
+                        <execution>
+                          <id>build-classpath</id>
+                          <phase>generate-sources</phase>
+                          <goals>
+                            <goal>build-classpath</goal>
+                          </goals>
+                          <configuration>
+
+                          </configuration>
+                        </execution>
                 </executions>
             </plugin>
             <plugin>

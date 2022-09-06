@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -39,11 +40,9 @@ import listeners.ParamListener;
 import listeners.PopUpActionListener;
 import listeners.keyBarcodeListener;
 import utils.TableColumnAdjuster;
-import view.element.InventreeItemCB;
 import view.element.InventreeItemFilterCB;
 import view.element.ScanTable;
 import view.model.StockItemModel;
-import view.element.StockLocationCB;
 
 /**
  *
@@ -65,6 +64,7 @@ public class ScanView extends JPanel
     InventreeItemFilterCB trsfStockList;
     JLabel TrsfLoc;
     ButtonGroup group;
+    JCheckBox useQuantity;
     
     // pour écoute des key
     private KeyHandlerManager khm;
@@ -138,6 +138,7 @@ public class ScanView extends JPanel
         constraints.gridx = 2;
         btnPan.add(transfertBtn, constraints);
         
+        JPanel rightCont = new JPanel(new GridLayout());
         // pour la selection des location
         JPanel listCont = new JPanel(new GridBagLayout());
         
@@ -149,21 +150,29 @@ public class ScanView extends JPanel
         
         GridBagConstraints gbdL = new GridBagConstraints();
         gbdL.insets = new Insets(1, 10, 1, 10);
-        gbdL.anchor = GridBagConstraints.NORTH;
+        gbdL.anchor = GridBagConstraints.EAST;
         gbdL.gridy=0;
         gbdL.gridx=0;
         listCont.add (destLoc, gbdL);
+        gbdL.gridy=1;
+        listCont.add (TrsfLoc, gbdL);
+        gbdL.anchor = GridBagConstraints.WEST;
+        gbdL.gridy=0;
         gbdL.gridx=1;
         listCont.add(stockList, gbdL);
         gbdL.gridy=1;
-        gbdL.gridx=0;
-        listCont.add (TrsfLoc, gbdL);
-        gbdL.gridx=1;
         listCont.add(trsfStockList, gbdL);
-       
         
+        // pour des element pour le decodeur de BC
+        JPanel ParamCont = new JPanel(new GridBagLayout());
+        useQuantity= new JCheckBox("Use barcode quantity :");
+        useQuantity.setActionCommand("change_use_quantity");
+        ParamCont.add (useQuantity);
+        
+        rightCont.add(listCont);
+        rightCont.add(ParamCont);
         paramCont.add(btnPan);//, BorderLayout.LINE_START);
-        paramCont.add(listCont);//, BorderLayout.LINE_END);
+        paramCont.add(rightCont);//, BorderLayout.LINE_END);
         
         // le textField pour la saisie des barcode
         JPanel txtCont = new JPanel(new BorderLayout());//new GridBagLayout());
@@ -208,6 +217,7 @@ public class ScanView extends JPanel
         purchaseBtn.addActionListener(this);
         consumeBtn.addActionListener(this);
         transfertBtn.addActionListener(this);
+        useQuantity.addActionListener(this);
         //stockList.addActionListener(this);
         
         khm = new KeyHandlerManager();
@@ -261,6 +271,9 @@ public class ScanView extends JPanel
          changeMode(mode);
          stockLoc = ini.getValue(CONSTANT.SCAN_PARAM_HEAD, CONSTANT.SCAN_STOCK_LOC);
          this.stockList.setSelectedId(stockLoc);
+         boolean usQ = Boolean.valueOf(ini.getValue(CONSTANT.SCAN_PARAM_HEAD, CONSTANT.SCAN_PARAM_USE_QUANTITY, "false"));
+         useQuantity.setSelected(usQ);
+         khm.setUserQuantity(usQ);
     }
     private void loadParam(InventreeLists ivl){
          
@@ -304,15 +317,15 @@ public class ScanView extends JPanel
                 controller.changeStatus(e.getActionCommand());
             break;
             case "stocklistchange":
-                String currLoc = stockList.getSelectedId();
-                System.out.println(this.getClass()+" ---> ActionEvent action cmd :"
-                        +e.getActionCommand()+" / paramString :"+e.paramString()
-                        +" - new loc :"+currLoc
-                );
-                
+                String currLoc = stockList.getSelectedId();               
                 controller.changeStockLoc(currLoc);
                 break;
-        }        
+            case "change_use_quantity":
+                boolean usQ = useQuantity.isSelected();
+                khm.setUserQuantity(usQ);
+                controller.changeUseQuantity(usQ);
+                break;     
+        }         
         bcTxt.requestFocus();
     }
 
@@ -320,7 +333,7 @@ public class ScanView extends JPanel
     public void processBarcode(BarcodeEvent e) {
         StockItem si = e.stockitem;
         si.stocklocation =(StockLocation) stockList.getSelectedItem();
-        si.quantity = 1;
+        //si.quantity = 1;
         si.action = group.getSelection().getActionCommand();
         if(si.action.equals(CONSTANT.MODE_TRANSFERT))
             si.transfertLocation = (StockLocation) trsfStockList.getSelectedItem();
@@ -332,7 +345,7 @@ public class ScanView extends JPanel
     @Override
     public void tableChanged(TableModelEvent e) {
         StockItem si = ((StockItemModel) bcTable.getModel()).getObjectAt(e.getFirstRow());
-        System.out.println("view.ScanView.tableChanged() type :"+e.getType());
+        //System.out.println("view.ScanView.tableChanged() type :"+e.getType());
         switch(e.getType()){
             case 2:// create new part
                 break;

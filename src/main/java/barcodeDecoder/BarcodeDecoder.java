@@ -6,6 +6,7 @@ package barcodeDecoder;
 
 import Inventree.item.StockItem;
 import barcode.barcode;
+import java.lang.String;
 
 /**
  *
@@ -19,6 +20,9 @@ public abstract class BarcodeDecoder {
     }
     
     public abstract void decodeBarcode(String bc);
+    public void decodeBarcode(String bc, boolean useQ){
+        this.decodeBarcode(bc);
+    }
     public abstract barcode getBarcode();
     public abstract String getBarcodeString();
     public String getBarcodeString(char sep){

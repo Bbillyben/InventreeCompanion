@@ -35,6 +35,7 @@ public class CONSTANT {
      public static final String SCAN_PARAM_HEAD ="SCAN";
      public static final String SCAN_PARAM_MODE="mode";
      public static final String SCAN_STOCK_LOC="stock_location";
+     public static final String SCAN_PARAM_USE_QUANTITY="use_bc_quantity";
      
      public static final String SCAN_FILE_HEAD ="FILE";
      public static final String SCAN_FILE_SAVEONEXIT ="save_on_exit";

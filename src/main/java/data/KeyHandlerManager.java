@@ -33,7 +33,8 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     private int secondeToRelease;
     
     private List<keyBarcodeListener> bcListener;
-
+    
+    private boolean useQuantity=false;
     private static BarcodeDecoder[] DECODERS=new BarcodeDecoder[]{
         new EAN128Decoder(), 
         new BasicBarcode()
@@ -58,6 +59,13 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     /* setter et getter */
     public void setSecondeToRelease(Double secToRel){
         secondeToRelease = (int) Math.round(secToRel*1000);
+    }
+    /**define if quantity from barcode decoding is used
+     * 
+     * @param useQ 
+     */
+    public void setUserQuantity(boolean useQ){
+        useQuantity=useQ;
     }
     
     /*       Ajout et suppression des objet à écouter     */
@@ -102,7 +110,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
         BarcodeEvent ev = new BarcodeEvent(this);
         //barcode bc = new barcode();
         
-        decoder.decodeBarcode(barcodeStr);
+        decoder.decodeBarcode(barcodeStr, useQuantity);
         StockItem si = new StockItem();
         decoder.processStockItem(si);
         ev.stockitem = si;

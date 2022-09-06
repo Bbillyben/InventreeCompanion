@@ -181,6 +181,11 @@ public class Model {
         this.preferenceUpdate(tmp);
         //this.dispatchInfo("Location change to : "+newLoc);
     }
+    public void changeUseQuantity(boolean useQ){
+        IniStruct tmp = new IniStruct();
+        tmp.setValue(CONSTANT.SCAN_PARAM_HEAD, CONSTANT.SCAN_PARAM_USE_QUANTITY, String.valueOf(useQ));
+        this.preferenceUpdate(tmp);
+    }
     
     /* -------------------------------------------------------------
     ---------------- GESITON DES CODE BARRE / StockItem -------------
