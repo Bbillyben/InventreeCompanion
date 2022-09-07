@@ -6,13 +6,12 @@ package barcodeDecoder;
 
 import Inventree.item.StockItem;
 import barcode.barcode;
-import java.util.Map;
 import com.google.common.collect.Maps;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -234,7 +233,7 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     @Override
     public String getBarcodeString(char sep){
-        return getBarcodeString(sep);
+        return recomposeBC(sep);
     }
     
     @Override
