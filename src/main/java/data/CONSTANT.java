@@ -4,9 +4,7 @@
  */
 package data;
 
-import Inventree.item.CompanyItem;
 import Inventree.item.StockLocation;
-import static java.lang.reflect.Array.set;
 import java.time.LocalDate;
 import java.util.Set;
 import javax.swing.JButton;
@@ -210,6 +208,7 @@ public class CONSTANT {
         //"Supplier", "Manufacturer",
         "quantity"
     );
+     // --------------- table de SEND - error part
     
     
 }
