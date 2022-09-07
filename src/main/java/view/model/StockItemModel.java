@@ -58,7 +58,7 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
     @Override
     public boolean isCellEditable(int row, int column) {
         // check if disabled
-        StockItem sit = siList.get(row);
+        StockItem sit = siList.get(siList.size()-1-row);
         
         if(sit.getStatus() == CONSTANT.STATUS_DELETED)
             return false;
@@ -96,7 +96,7 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
     {
         if(columnIndex < 0 || columnIndex > columnNames.length)
             return null;
-        StockItem row = siList.get(rowIndex);
+        StockItem row = siList.get(siList.size()-1 - rowIndex);
         
         return row.get(columnNames[columnIndex], columnClass[columnIndex]);
     }
@@ -109,7 +109,7 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
          +"\n    -> column:"+columnNames[columnIndex]
          );*/
          
-         StockItem row = siList.get(rowIndex);
+         StockItem row = siList.get(siList.size()-1-rowIndex);
          if(columnNames[columnIndex] =="remove" && (Boolean) value){
              row.setStatus(CONSTANT.STATUS_DELETED);
              this.fireTableRowsUpdated(rowIndex, columnIndex);
@@ -125,7 +125,7 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
          if(row < 0 || row >= siList.size())
              return null;
 
-         return siList.get(row);
+         return siList.get(siList.size()-1-row);
      }
 
     @Override

@@ -26,7 +26,9 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -40,6 +42,7 @@ import listeners.ParamListener;
 import listeners.PopUpActionListener;
 import listeners.keyBarcodeListener;
 import utils.TableColumnAdjuster;
+import view.LayersItem.BlinkingLayerUI;
 import view.element.InventreeItemFilterCB;
 import view.element.ScanTable;
 import view.model.StockItemModel;
@@ -65,6 +68,8 @@ public class ScanView extends JPanel
     JLabel TrsfLoc;
     ButtonGroup group;
     JCheckBox useQuantity;
+    
+    BlinkingLayerUI layerUI;
     
     // pour écoute des key
     private KeyHandlerManager khm;
@@ -207,12 +212,19 @@ public class ScanView extends JPanel
         
         
         // ajout au panel principal
-        this.add(paramCont, BorderLayout.PAGE_START);
-        this.add(tableCont , BorderLayout.CENTER);
-        this.add(txtCont, BorderLayout.PAGE_END);
-        this.setBorder(BorderFactory.createTitledBorder(
+        JPanel BG = new JPanel(new BorderLayout());
+        
+        BG.add(paramCont, BorderLayout.PAGE_START);
+        BG.add(tableCont , BorderLayout.CENTER);
+        BG.add(txtCont, BorderLayout.PAGE_END);
+        BG.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Scan"));
         
+        
+        // decoration JLayer
+        layerUI = new BlinkingLayerUI();
+        JLayer<JComponent> jlayer = new JLayer<JComponent>(BG, layerUI);
+        this.add(jlayer);
         // les listener
         purchaseBtn.addActionListener(this);
         consumeBtn.addActionListener(this);
@@ -331,6 +343,7 @@ public class ScanView extends JPanel
 
     @Override
     public void processBarcode(BarcodeEvent e) {
+        layerUI.startBlink(btnPan.getBackground());
         StockItem si = e.stockitem;
         si.stocklocation =(StockLocation) stockList.getSelectedItem();
         //si.quantity = 1;
@@ -340,6 +353,7 @@ public class ScanView extends JPanel
         //System.out.println(this+" in loc : "+si.stocklocation);
         controller.addStockItem(e.stockitem);
         //System.out.println(this+ " Barcode Event : \n"+e);
+        
     }
 
     @Override
