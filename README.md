@@ -9,3 +9,10 @@ other barcodeDecoder could bee added (extends https://github.com/Bbillyben/Inven
 
 
 Barcode are referenced in a Manufacturer entry (via MPN).
+
+
+
+use : 
+[rotatedIcon](https://tips4java.wordpress.com/2009/04/06/rotated-icon/) and [textIcon](https://tips4java.wordpress.com/2009/04/02/text-icon/) by Rob Camick
+
+and [TableColumnAdjuster](https://gist.github.com/tarple/dfebce9502b92559dd63) by Tarple
