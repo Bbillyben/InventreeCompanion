@@ -37,6 +37,7 @@ listeners\PopUpActionListener.class
 Inventree\InfoWorker.class
 Inventree\item\StockLocation.class
 Inventree\APIConnector.class
+view\LayersItem\BlinkingLayerUI.class
 view\ScanView.class
 controller\SendFollowController.class
 barcodeDecoder\EAN128Decoder$1.class

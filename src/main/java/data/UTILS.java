@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -61,7 +62,11 @@ public class UTILS {
         
         return str;
     }
-    
+    // ================================ pour les barcode
+    private static final Pattern CLEAN_BC_PATTERN=Pattern.compile("[\s \r\n]*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+    public static String cleanBC(String bc){
+        return CLEAN_BC_PATTERN.matcher(bc).replaceAll("");
+    }
     // ================================= POUR LES DATES
     public static String formatDate(LocalDate ld, String format){
         if(ld == null)
@@ -90,6 +95,21 @@ public class UTILS {
             cb.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             return true;
         }
+    }
+    
+    /**Constraint an int between 2 bornes
+     * 
+     * @param value current value
+     * @param min minimal value
+     * @param max maximale value
+     * @return 
+     *      - value if min<value<max
+     *      - min if value<min
+     *      - max if value > max
+     * 
+     */
+    public static int cstIntbtw(int value, int minV, int maxV){
+        return Math.max(minV, Math.min(value, maxV));
     }
     // ================================= GESTION DE FICHIER
         

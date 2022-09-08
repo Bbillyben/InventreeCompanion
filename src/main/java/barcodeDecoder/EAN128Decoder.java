@@ -7,6 +7,7 @@ package barcodeDecoder;
 import Inventree.item.StockItem;
 import barcode.barcode;
 import com.google.common.collect.Maps;
+import data.UTILS;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -212,7 +213,6 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     @Override
     public void processStockItem(StockItem si) {
-        
         si.barcode = getBarcode();
         si.batch = getFristAI(equivSearch.get("batch"));
         si.expiry_date = transformDateStr(getFristAI(equivSearch.get("ExpiryDate")));
@@ -221,8 +221,7 @@ public class EAN128Decoder extends BarcodeDecoder {
             si.quantity=Integer.valueOf(getFristAI(equivSearch.get("amount")));
         }else{
             si.quantity=1;
-        }
-            
+        }            
     }
     
     
@@ -244,7 +243,7 @@ public class EAN128Decoder extends BarcodeDecoder {
   
     protected void decodeComplex(String s, char cBreak){
       this.initDecode();
-      
+      s=UTILS.cleanBC(s);
       String pattern = "(" + startCode + "[^\\]]*)";
       Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
       Matcher m = r.matcher(s);
@@ -252,13 +251,10 @@ public class EAN128Decoder extends BarcodeDecoder {
       int lastMatchPos = 0;
       
       while (m.find()) {
-//            for (int i = 0; i < m.groupCount(); i= i+1) {
-//                System.out.println("gc : " + m.group(i));
-//            }
             this.decodeBC(m.group(1), cBreak);
             lastMatchPos = m.end();
        }
-      //System.out.println("============== > THis is length :"+this);
+     
       if (lastMatchPos != s.length() || data.isEmpty())
             throw new IllegalArgumentException("This is not a EAN-128 barcode");      
     }
@@ -341,6 +337,9 @@ public class EAN128Decoder extends BarcodeDecoder {
         }
         int mm = Integer.valueOf(dateStr.substring(2,4));// base Janvier à 0
         int jj = Integer.valueOf(dateStr.substring(4));
+        // borne des valeurs
+        mm = UTILS.cstIntbtw(mm, 1, 12);
+        jj = UTILS.cstIntbtw(jj, 1, 31);
         LocalDate d =LocalDate.of(year, mm, jj); 
         
         //System.out.println(this.getClass()+" ----> date :"+d);
