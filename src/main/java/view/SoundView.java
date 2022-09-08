@@ -7,20 +7,21 @@ import Sound.SoundUtils;
 import controller.SoundController;
 import data.CONSTANT;
 import data.IniStruct;
-import events.BarcodeEvent;
+import events.InfoEvent;
 import events.IniEvent;
 import events.iEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import listeners.BarcodeListener;
+import listeners.InfoListener;
 import listeners.ListenerI;
 
 /**
  *
  * @author blegendre
  */
-public class SoundView implements iView, BarcodeListener, ListenerI {
+public class SoundView implements iView, BarcodeListener, ListenerI, InfoListener {
 
     private final SoundController controller;
     private boolean enabled;
@@ -49,7 +50,7 @@ public class SoundView implements iView, BarcodeListener, ListenerI {
              case IniEvent.INI_LOADED, IniEvent.INI_CHANGED:
                 updateFromIni(((IniEvent) e).ini);
                 break;
-            case BarcodeEvent.NEW_BARCODE:
+            case InfoEvent.NEW_SCAN://BarcodeEvent.NEW_BARCODE:
                 toneSound(784,200);
                 break;
             

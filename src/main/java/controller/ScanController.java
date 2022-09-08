@@ -5,7 +5,6 @@ package controller;
 
 import Inventree.item.StockItem;
 import data.CONSTANT;
-import data.IniStruct;
 import events.NavEvent;
 import events.iEvent;
 import listeners.BarcodeListener;
@@ -13,7 +12,6 @@ import listeners.ListenerI;
 import listeners.NavigationListener;
 import listeners.ParamListener;
 import model.Model;
-import view.ScanView;
 import view.iView;
 
 /**
@@ -28,7 +26,7 @@ public class ScanController extends iController implements NavigationListener {
     }
     
     public void addStockItem(StockItem si){
-        model.addStockItem(si);
+        model.addStockItem(si, true);
     }
     public void updateStockItem(StockItem si){
         model.reCheckStockItem(si);

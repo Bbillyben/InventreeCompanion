@@ -14,6 +14,7 @@ public class InfoEvent extends iEvent {
    
     public static final String INI_FILE_ERROR = "ini_file_error";
     public static final String INFO_NORM = "information";
+    public static final String NEW_SCAN = "new_scan";
     
     public static final String SAVE_ERROR = "Saving_error";
     public static final String SAVE_SUCESS = "Saving_Success";

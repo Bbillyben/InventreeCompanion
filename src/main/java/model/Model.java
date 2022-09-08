@@ -188,6 +188,19 @@ public class Model {
     /* -------------------------------------------------------------
     ---------------- GESITON DES CODE BARRE / StockItem -------------
     ---------------------------------------------------------------- */
+    /**Start procedure to add a StockItem to the scan list, 
+     * 
+     * @param si : stockitem to add
+     * @param fromScanner if the si is from the scanner
+     */
+    public void addStockItem(StockItem si, boolean fromScanner){
+        if(fromScanner){
+            InfoEvent e = new InfoEvent(this, InfoEvent.NEW_SCAN);
+            dispatchEvent(InfoListener.class, e);
+        }
+        addStockItem(si);
+        
+    }
     public void addStockItem(StockItem si){
         //Toolkit.getDefaultToolkit().beep();
         this.dispatchInfo("adding stock item "+si.EAN);

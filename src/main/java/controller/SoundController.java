@@ -4,6 +4,7 @@
 package controller;
 
 import listeners.BarcodeListener;
+import listeners.InfoListener;
 import listeners.ListenerI;
 import model.Model;
 import view.iView;
@@ -23,5 +24,6 @@ public class SoundController extends iController {
         super.setView(vi);
         model.addEventListener(view, BarcodeListener.class);
         model.addEventListener(view, ListenerI.class);
+        model.addEventListener(view, InfoListener.class);
     }
 }
