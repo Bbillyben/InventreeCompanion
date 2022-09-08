@@ -13,11 +13,10 @@ import controller.ParamController;
 import controller.ScanController;
 import controller.SendController;
 import controller.SendFollowController;
+import controller.SoundController;
 import data.CONSTANT;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dialog;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Model;
@@ -28,9 +27,8 @@ import view.ParamView;
 import view.ScanView;
 import view.SendFollowView;
 import view.SendView;
+import view.SoundView;
 import view.StatusView;
-import view.element.CreatePartDialog;
-import view.element.SendOutputDialog;
 
 /**
  *
@@ -74,6 +72,11 @@ public class InventreeCompanion {
         InfoController bcC =new InfoController(model);
         StatusView sV = new StatusView(bcC);
         bcC.setView(sV);
+        
+        // sound view
+        SoundController scc = new SoundController(model);
+        SoundView sv = new SoundView(scc);
+        scc.setView(sv);
         
         // le panel conteneur des view 
         midPanel = new JPanel(new CardLayout());//new BorderLayout(1,1));

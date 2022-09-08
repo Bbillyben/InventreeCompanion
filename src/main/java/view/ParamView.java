@@ -40,6 +40,7 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         
     private JCheckBox cbPass;
     private JCheckBox cbAuto;
+    private JCheckBox cbSound;
     private JButton buttonSave;
     
     private ButtonGroup group;
@@ -124,6 +125,8 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         JLabel labelAuto= new JLabel("Auto Login : ");
         cbAuto = new JCheckBox();
         
+        JLabel soundLabel = new JLabel("Play Sounds :");
+        cbSound = new JCheckBox();
         
         GridBagConstraints cst = new GridBagConstraints();
         cst.anchor = GridBagConstraints.NORTH;
@@ -141,6 +144,11 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         userCont.add(labelAuto, cst);
         cst.gridx = 1;
         userCont.add(cbAuto, cst);
+        cst.gridx = 0;
+        cst.gridy = 2;
+        userCont.add(soundLabel, cst);
+        cst.gridx = 1;
+        userCont.add(cbSound, cst);
         userCont.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "USER Parameters"));
         
@@ -181,6 +189,7 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_secEAN,String.valueOf(secEAN.getValue()));
         tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_SAVE_PASS,String.valueOf(cbPass.isSelected()));
         tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_AUTO_LOG,String.valueOf(cbAuto.isSelected()));
+        tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_PLAY_SOUND,String.valueOf(cbSound.isSelected()));
         tmp.setValue(CONSTANT.SCAN_FILE_HEAD,CONSTANT.SCAN_FILE_SAVEONEXIT,String.valueOf(cbSave.isSelected()));
         //tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_FORCE_LOCATION,String.valueOf(cbLoc.isSelected()));
         tmp.setValue(CONSTANT.PARAM_HEAD,CONSTANT.PARAM_FORCE_LOCATION,group.getSelection().getActionCommand());
@@ -192,11 +201,13 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         String ean=is.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_secEAN, String.valueOf(CONSTANT.SCAN_SEC_EAN));
         String pass = is.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_SAVE_PASS, "false");
         String auto = is.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_AUTO_LOG, "false");
+        String sound = is.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_PLAY_SOUND, "false");
         String forceLoc= is.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_FORCE_LOCATION, CONSTANT.SCAN_FORCE_LOC_LOCAL);
         String saveOnExit = is.getValue(CONSTANT.SCAN_FILE_HEAD,CONSTANT.SCAN_FILE_SAVEONEXIT,"true");
         secEAN.setValue(Double.valueOf(ean));
         cbPass.setSelected(Boolean.valueOf(pass));
         cbAuto.setSelected(Boolean.valueOf(auto));
+        cbSound.setSelected(Boolean.valueOf(sound));
         cbSave.setSelected(Boolean.valueOf(saveOnExit));
         //cbLoc.setSelected(Boolean.valueOf(forceLoc));
         List<AbstractButton> btnGrp = Collections.list(group.getElements());

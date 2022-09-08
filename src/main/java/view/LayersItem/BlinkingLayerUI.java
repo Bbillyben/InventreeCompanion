@@ -33,6 +33,7 @@ public class BlinkingLayerUI extends LayerUI<JComponent> implements ActionListen
     private Color color;
     
     public void startBlink(Color col){
+        //Toolkit.getDefaultToolkit().beep();
         color = col;
         if(isBlinking)
             return;

@@ -330,8 +330,11 @@ public class APIConnector implements ListenerI{
      * @param si stockitem to be processed
      */
     public void updateStockItemData(StockItem si,String forceStockLoc){
-        if(si.EAN == null)
+        if(si.EAN == null){
             si.setStatus(CONSTANT.STATUS_ERROR_EAN, "No EAN defined");
+            return;
+        }
+            
         // reinitialise les datat du SI
         si.setAsNewItem();
         

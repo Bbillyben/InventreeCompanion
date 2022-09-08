@@ -25,6 +25,7 @@ C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\utils\RotatedIcon.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\controller\LoginController.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\Inventree\item\StockLocation.java
+C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\view\SoundView.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\listeners\ConnectionListener.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\controller\ParamController.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\controller\SendFollowController.java
@@ -38,11 +39,13 @@ C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\data\CONSTANT.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\data\IniStruct.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\events\InventreeTableModelEvent.java
+C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\controller\SoundController.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\view\element\LinkPartDialog.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\view\element\CBFiltering\ComboBoxFilterDecorator.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\events\ConnectionEvent.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\listeners\SendListener.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\controller\ScanController.java
+C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\Sound\SoundUtils.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\events\SendEvent.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\view\element\SendOutputDialog.java
 C:\Users\blegendre\Documents\Drive_Dev\Java_Dev\InventreeCompanion\src\main\java\view\element\InventreeItemCB.java

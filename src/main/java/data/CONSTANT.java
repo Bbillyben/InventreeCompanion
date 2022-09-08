@@ -28,6 +28,7 @@ public class CONSTANT {
     public static final String PARAM_secEAN ="seconde_to_EAN";
     public static final String PARAM_SAVE_PASS ="save_password";
     public static final String PARAM_AUTO_LOG ="auto_login";
+    public static final String PARAM_PLAY_SOUND ="play_sound";
     public static final String PARAM_FORCE_LOCATION ="force_location";
     
      public static final String SCAN_PARAM_HEAD ="SCAN";

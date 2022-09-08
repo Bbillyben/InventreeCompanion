@@ -15,8 +15,6 @@ import data.IniHandler;
 import data.IniStruct;
 import data.SerialHandler;
 import data.UTILS;
-
-import events.ConnectionEvent;
 import events.*;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -191,6 +189,7 @@ public class Model {
     ---------------- GESITON DES CODE BARRE / StockItem -------------
     ---------------------------------------------------------------- */
     public void addStockItem(StockItem si){
+        //Toolkit.getDefaultToolkit().beep();
         this.dispatchInfo("adding stock item "+si.EAN);
         // add to list or to a current stock item
         String forceStockLoc = iniH.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_FORCE_LOCATION, "false");
