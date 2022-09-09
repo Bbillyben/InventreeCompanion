@@ -9,13 +9,13 @@ import barcodeDecoder.BarcodeDecoder;
 import barcodeDecoder.BasicBarcode;
 import barcodeDecoder.EAN128Decoder;
 import events.BarcodeEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -153,15 +153,15 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
         barcode += c;
-        this.handleChar();
+        if(e.getKeyCode()== KeyEvent.VK_ENTER)
+            this.handleChar();
     }
    // pour les JtextField
     @Override
     public void actionPerformed(ActionEvent e) {
-        //System.out.println(" Action performed : " + e.toString());
+       //System.out.println(" Action performed : " + e.toString());
        barcode += e.getActionCommand();
-        
-        ((JTextField) e.getSource()).setText("");
+       ((JTextField) e.getSource()).setText("");
         this.handleChar();
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
