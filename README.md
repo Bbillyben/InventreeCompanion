@@ -141,10 +141,15 @@ Error status :
         * Clean Stock list : to remove all items from the list
     - File  
         * Save List : to save the current list in "ext_file/currentList.ser"
+        * Export to CSV : to export current list to csv format (coma separated)
+        * Export to Excel : to export to Excel Format (xlsx)
 
 
 
 use Library : 
 [rotatedIcon](https://tips4java.wordpress.com/2009/04/06/rotated-icon/) and [textIcon](https://tips4java.wordpress.com/2009/04/02/text-icon/) by Rob Camick
 
-and [TableColumnAdjuster](https://gist.github.com/tarple/dfebce9502b92559dd63) by Tarple
+and [TableColumnAdjuster](https://gist.github.com/tarple/dfebce9502b92559dd63) by Tarple.
+
+and com.opencsv 
+and org.apache.poi / poi-ooxml

@@ -5,8 +5,11 @@
 package barcode;
 
 import Inventree.item.StockItem;
+import Inventree.item.StockLocation;
 import data.CONSTANT;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -81,7 +84,34 @@ public class StockList implements Serializable{
     public ArrayList<StockItem> getList(){
         return bList;
     }
+    // -------------------------------- Creation d'un item pour l'export -------------------- //
+    // -------------------------------------------------------------------------------------- //
     
-    
+    public ArrayList<String[]> getExportData(){
+        ArrayList<String[]> expD = new ArrayList<>();
+        
+        String[] tmp = new String[CONSTANT.EXPORT_COL.length+1];
+        System.arraycopy(CONSTANT.EXPORT_COL, 0, tmp, 0, CONSTANT.EXPORT_COL.length);
+        
+        expD.add(tmp);
+        Object ob;
+        for(StockItem si : bList){
+            tmp = new String[CONSTANT.EXPORT_COL.length+1];
+            for(int i = 0; i<CONSTANT.EXPORT_COL.length; i++){
+                ob=si.get(CONSTANT.EXPORT_COL[i], CONSTANT.EXPORT_COL_CLASS[i]);
+                if(ob==null)
+                    continue;
+                if(ob.getClass() == StockLocation.class){
+                    tmp[i]=((StockLocation) ob).getName();
+                }else if(ob.getClass() == LocalDate.class){
+                    tmp[i]=((LocalDate) ob).format(DateTimeFormatter.ISO_DATE);
+                }else{
+                    tmp[i]=ob.toString();
+                }
+            }
+            expD.add(tmp);
+        }
+        return expD;
+    }
     
 }

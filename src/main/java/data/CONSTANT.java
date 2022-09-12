@@ -66,8 +66,13 @@ public class CONSTANT {
     public static final String ACTION_SEND_ALL = "send_all";
 
     public static final String ACTION_COPY_VALUE = "copy_value";
+    
+    public static final String ACTION_EXPORT_CSV = "export_CSV";
+    public static final String ACTION_EXPORT_EXCEL = "export_Excel";
 // =================  BARCODE  ================  //
     // ===============================================  //
+    public static final String STATUS_OK = "ok"; // general purpose status
+    public static final String STATUS_ERROR = "error"; // general purpose status
     public static final String STATUS_PENDING = "pending";// en attente d'action => vers identification
     
     public static final String STATUS_ERROR_EAN = "error no EAN";// EAN n'est pas défini
@@ -210,6 +215,19 @@ public class CONSTANT {
         "quantity"
     );
      // --------------- table de SEND - error part
+    
+     // =====================  POUR L'EXPORT =============  //
+    // ====================================================  //
+    public static final String[] EXPORT_COL =  new String[] {
+        "Barcode", "EAN","batch","Expiry Date","Name", 
+        "location", "transfert location", "IPN",
+        "quantity in stock", "quantity", "action", "status"
+    };
+     public static final Class[] EXPORT_COL_CLASS =  new Class[] {
+        String.class,String.class, String.class,LocalDate.class, String.class, 
+        StockLocation.class,StockLocation.class, String.class,
+         Integer.class, Integer.class, String.class, String.class
+    };
     
     
 }

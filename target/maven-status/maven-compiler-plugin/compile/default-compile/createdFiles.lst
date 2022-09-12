@@ -23,6 +23,7 @@ events\InventreeTableModelEvent.class
 events\InfoEvent.class
 view\element\InventreeItemCBRenderer.class
 barcode\barcode.class
+view\ExportView.class
 listeners\ConnectionListener.class
 data\CONSTANT.class
 utils\TextIcon$Layout.class
@@ -56,7 +57,10 @@ view\element\CreatePartDialog.class
 view\CreatePartView.class
 data\IniHandler.class
 view\element\renderer\table\StockLocationTableEditor.class
+events\ExportEvent.class
 Inventree\item\StockItem.class
+listeners\ExportListener.class
+controller\ExportController.class
 view\model\StockItemModel.class
 view\element\renderer\table\ButtonEditor_add.class
 listeners\NavigationListener.class

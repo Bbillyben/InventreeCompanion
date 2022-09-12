@@ -89,4 +89,15 @@ public class InventreeLists {
         return si;
     }
     
+    
+    
+    
+    // -------------------------------- Creation d'un item pour l'export -------------------- //
+    // -------------------------------------------------------------------------------------- //
+    
+    public ArrayList<String[]> getExportData(){
+        
+        return stockList.getExportData();
+    }
+    
 }

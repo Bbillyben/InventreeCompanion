@@ -19,6 +19,9 @@ public class InfoEvent extends iEvent {
     public static final String SAVE_ERROR = "Saving_error";
     public static final String SAVE_SUCESS = "Saving_Success";
     
+    public static final String GENERIC_OK = "generic_ok";
+     public static final String GENERIC_ERROR = "generic_error";
+    
     public String info;
     
     public InfoEvent(Object source) {

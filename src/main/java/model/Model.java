@@ -158,6 +158,13 @@ public class Model {
             case CONSTANT.ACTION_SAVE:
                 saveScanList();
                 return;
+            case CONSTANT.ACTION_EXPORT_EXCEL,CONSTANT.ACTION_EXPORT_CSV :
+                ExportEvent se = new ExportEvent(this, ExportEvent.EXPORT_DATA);
+                se.export_type=page;
+                se.export_data=ivl.getExportData();
+                this.dispatchEvent(ExportListener.class, se);
+                return;
+
         }
 
         NavEvent e = new NavEvent(this, NavEvent.NAVIGATE, page);
@@ -399,6 +406,19 @@ public class Model {
         }
     }
    
+    // ================== GESTION DES EXPORT ============== //
+    // =================================================================== //
+    public void exportFeedback(String status, String filepath, String rqs){
+        if(status.equals(CONSTANT.STATUS_OK)){
+            this.dispatchInfo("Export Success", InfoEvent.GENERIC_OK);
+        }else{
+            this.dispatchInfo("Export Error", InfoEvent.GENERIC_ERROR);
+        }
+        
+        //InfoEvent e = new InfoEvent(this, InfoEvent.INFO_NORM)
+    }
+    
+    
     /*  ================== GESTION DU CLIPBOARD ================= */
     // ========================================================== //
     public void addToClipBoard(String copyValue){
@@ -407,7 +427,11 @@ public class Model {
         cb.setContents(ss, null);
         this.dispatchInfo(copyValue + " has been copied to clipboard");
     }
+    
+    
+    
     /* --------------------- Gestion des préférence ------------- */
+     // ========================================================== //
     public void preferenceLoaded(){
         this.dispatchInfo("Ini file loaded", InfoEvent.INFO_NORM);
         //update du connecteur 
@@ -483,6 +507,7 @@ public class Model {
     }
     
     /* --------------------- Gestion des param serverur/ listes  ------------- */
+     // ========================================================== //
     public void paramLoaded(){
         ParamEvent e = new ParamEvent(this, ParamEvent.PARAM_LOADED, InventreeLists.getInstance());
         this.dispatchEvent(ParamListener.class, e);
@@ -490,6 +515,7 @@ public class Model {
   
     
     /* --------------------- Gestion des Event ----------------- */
+     // ========================================================== //
     public void addEventListener(ListenerI listener, Class listenerInterfaceClass){
         //System.out.println("Model addEvent : "+eventClass+ "/ "+listener);
         listeners.add(listenerInterfaceClass, listener);

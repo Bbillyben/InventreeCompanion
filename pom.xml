@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ben.inventreecompanion</groupId>
     <artifactId>InventreeCompanion</artifactId>
-    <version>beta_0.4</version>
+    <version>beta_0.5</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -169,6 +169,30 @@
             <version>1.3.2</version>
         </dependency>
         <!-- FIN JDatePicker -->
+        <!-- FOR EXPORT CSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.1</version>
+        </dependency>
+        <!-- FIN EXPORT CSV -->
+        <!-- FOR EXPORT EXCEL -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+              <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <!-- FIN EXPORT CSV -->
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

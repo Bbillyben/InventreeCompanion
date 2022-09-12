@@ -23,6 +23,8 @@ public class SendEvent extends iEvent {
     public static final String LINK_ITEM_FAILED = "link_item_failed";
     public static final String LINK_ITEM_SUCESS = "link_item_success";
     
+    public static final String EXPORT_SCAN_LIST = "export_scan_list";
+    
     public StockItem item;
     public SendEvent(Object source) {
          super(source);
