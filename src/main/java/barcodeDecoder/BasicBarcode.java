@@ -6,6 +6,7 @@ package barcodeDecoder;
 
 import Inventree.item.StockItem;
 import barcode.barcode;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,13 +16,14 @@ public class BasicBarcode extends BarcodeDecoder {
     private String barcodeStr;
     protected String type = "BASIC";
     
-    public  boolean isSupported(String bc){
+    @Override
+    public  boolean isSupported(ArrayList<String> bc){
         return true;
     }
     
     @Override
-    public void decodeBarcode(String bc) {
-        barcodeStr = bc;
+    public void decodeBarcode(ArrayList<String> bc) {
+        barcodeStr = String.join("", bc);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class BasicBarcode extends BarcodeDecoder {
     @Override
     public void processStockItem(StockItem si) {
         si.barcode = getBarcode(); 
-        si.EAN = getBarcode().EAN; 
+        si.EAN = si.barcode.EAN; 
         si.quantity = 1;
     }
     
