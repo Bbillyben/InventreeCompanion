@@ -82,7 +82,7 @@ public class CONSTANT {
     public static final String STATUS_ON_UPDATE = "on update";// mise à jour des infos
     public static final String STATUS_ITEM_FOUND = "item found";// item identifié dans les stock
     
-    public static final String STATUS_ERR_NO_ITEM_REMOVE = "Err: no item to remove";// si action remove et pas d'item stock identifié
+    public static final String STATUS_ERR_NO_ITEM_REMOVE = "Err: no item identified";// si action remove et pas d'item stock identifié
     public static final String STATUS_ERR_QUANTITY = "Err: Stock quantity insufficient";//si action remove et que quantité stock < quantité demandé
     public static final String STATUS_ERR_SAME_LOC = "Err: location identical";//si action transfert et même location selectionées
     public static final String STATUS_ERR_LOC = "Err: No Location defined";// si un stocklocation n'est pas défini 
