@@ -409,7 +409,8 @@ public class APIConnector implements ListenerI{
         if (jso.length() >0 ){
             obj = jso.getJSONObject(0);
             pi.setId(obj.getInt("pk"));
-            pi.IPN = obj.getString("IPN");
+            if(obj.get("IPN")!=JSONObject.NULL)
+                pi.IPN = obj.getString("IPN");
             pi.setName(obj.getString("name"));
             updateStockInfo(si, forceStockLoc);
         }else{

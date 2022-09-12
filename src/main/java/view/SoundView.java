@@ -60,7 +60,7 @@ public class SoundView implements iView, BarcodeListener, ListenerI, InfoListene
 
     private void updateFromIni(IniStruct ini) {
             String isEnabled = ini.getValue(CONSTANT.PARAM_HEAD, CONSTANT.PARAM_PLAY_SOUND, "false");
-            System.out.println("view.SoundView.updateFromIni() isEnabled:"+isEnabled);
+            
             enabled = Boolean.valueOf(isEnabled);
     }
     
