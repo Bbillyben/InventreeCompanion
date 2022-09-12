@@ -1,6 +1,7 @@
 view\element\CBFiltering\HtmlHighlighter.class
 controller\ScanController.class
 Inventree\item\InventreeItem.class
+view\SoundView.class
 Inventree\SendWorker.class
 listeners\SendListener.class
 utils\RotatedIcon$Rotate.class
@@ -8,6 +9,7 @@ controller\SendController.class
 Inventree\item\PartItem.class
 view\element\renderer\table\BasicDateTableRenderer.class
 view\element\StockLocRenderer.class
+controller\SoundController.class
 ben\inventreecompanion\InventreeCompanion$1.class
 view\element\renderer\table\StockLocationTableRenderer.class
 view\StatusView.class
@@ -94,6 +96,7 @@ view\element\CBFiltering\ComboBoxFilterDecorator$1.class
 view\element\StockLocationCB.class
 view\MenuView.class
 view\element\SendOutputDialog.class
+Sound\SoundUtils.class
 controller\InfoController.class
 Inventree\item\CompanyItem.class
 utils\TableColumnAdjuster.class

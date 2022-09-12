@@ -173,32 +173,36 @@ public class EAN128Decoder extends BarcodeDecoder {
     
     
     /////
-    public  boolean isSupported(String bc){
-        return bc.toUpperCase().indexOf(startCode) == 0;
+    @Override
+    public  boolean isSupported(ArrayList<String> bc){
+        return isSupported(bc.get(0));
+    }
+    public boolean isSupported(String str){
+        return str.toUpperCase().indexOf(startCode) == 0;
     }
     
     public EAN128Decoder() {
       
     }
-    public EAN128Decoder(String s) {
+    /*public EAN128Decoder(String s) {
         this.decodeBarcode(s, defaultBreak);
     }
     public EAN128Decoder(String s, char fnc1) {
         this.decodeBarcode(s, fnc1);
-    }
+    }*/
     
     @Override
-    public void decodeBarcode(String s){
+    public void decodeBarcode(ArrayList<String> s){
         //this.initDecode();
         this.decodeComplex(s, defaultBreak);
     }
     @Override
-    public void decodeBarcode(String s, boolean useQ){
+    public void decodeBarcode(ArrayList<String> s, boolean useQ){
         useBCQuantity = useQ;
         //this.initDecode();
         this.decodeComplex(s, defaultBreak);
     }
-    public void decodeBarcode(String s, char fnc1){
+    public void decodeBarcode(ArrayList<String> s, char fnc1){
         //this.initDecode();
         this.decodeComplex(s, fnc1);
     }
@@ -241,21 +245,22 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     
   
-    protected void decodeComplex(String s, char cBreak){
+    protected void decodeComplex(ArrayList<String> barcodes, char cBreak){
       this.initDecode();
-      s=UTILS.cleanBC(s);
       String pattern = "(" + startCode + "[^\\]]*)";
       Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-      Matcher m = r.matcher(s);
-      
-      int lastMatchPos = 0;
-      
-      while (m.find()) {
-            this.decodeBC(m.group(1), cBreak);
-            lastMatchPos = m.end();
-       }
+      for(String str : barcodes){
+         
+        str=UTILS.cleanBC(str);
+        Matcher m = r.matcher(str);
+        while (m.find()) {
+             if(isSupported(m.group(1))){
+              this.decodeBC(m.group(1), cBreak);
+             }
+         }     
+      }
      
-      if (lastMatchPos != s.length() || data.isEmpty())
+      if (data.isEmpty())
             throw new IllegalArgumentException("This is not a EAN-128 barcode");      
     }
     

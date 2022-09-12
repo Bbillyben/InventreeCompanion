@@ -29,6 +29,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     
     private List<Object> listeners;
     private String barcode;
+    private ArrayList<String> barcodes;
     private ScheduledExecutorService ses;
     private int secondeToRelease;
     
@@ -51,6 +52,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     
      private void init(){
         //bc128Deco = new GS1Code128Data();
+        barcodes = new ArrayList<>();
         listeners = new ArrayList<>();
         bcListener = new ArrayList<>();
         barcode = "";
@@ -96,23 +98,20 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     
     /* gestion des barcode */
      private void handleBarcode() {
-        String barcodeStr = barcode.replace(System.lineSeparator(), "");
-        barcode ="";
-        
         // find right decoder
-        BarcodeDecoder decoder = getDecoder(barcodeStr);
+        BarcodeDecoder decoder = getDecoder(barcodes);
         if(decoder == null){
             return;
             //throw new Exception("Unknown barcode type : "+barcodeStr);
         }
         
         //System.out.println(" barcode : " + barcode);
-        BarcodeEvent ev = new BarcodeEvent(this);
-        //barcode bc = new barcode();
-        
-        decoder.decodeBarcode(barcodeStr, useQuantity);
+        BarcodeEvent ev = new BarcodeEvent(this);        
+        decoder.decodeBarcode(barcodes, useQuantity);
         StockItem si = new StockItem();
         decoder.processStockItem(si);
+        // clean current barcode 
+        barcodes.clear();
         ev.stockitem = si;
         ev.barcode = si.barcode;
         this.dispatchEvent(ev);
@@ -124,7 +123,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
       * @param barcodeStr the barcode 
       * @return 
       */
-     protected BarcodeDecoder getDecoder(String barcodeStr){
+     protected BarcodeDecoder getDecoder(ArrayList<String> barcodeStr){
          for(BarcodeDecoder bcd : DECODERS){
             if(bcd.isSupported(barcodeStr)){
                 return bcd;
@@ -137,9 +136,9 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
      * à partir de Panel ou jtextfield ou autre
      */
      private void handleChar(){
-         if(barcode == null || barcode.length()<1)
+         if(barcodes == null || barcodes.size()<1)
              return;
-        int secF = getDecoder(barcode).isMultiple() ? secondeToRelease : 100;
+        int secF = getDecoder(barcodes).isMultiple() ? secondeToRelease : 100;
         Runnable task2 = () -> this.handleBarcode();
         if(!ses.isTerminated())
             ses.shutdownNow();
@@ -153,14 +152,21 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     public void keyTyped(KeyEvent e) {
         char c = e.getKeyChar();
         barcode += c;
-        if(e.getKeyCode()== KeyEvent.VK_ENTER)
+        if(e.getKeyCode()== KeyEvent.VK_ENTER){
+            barcodes.add(barcode);
+            barcode="";
             this.handleChar();
+        }
+            
+            
     }
    // pour les JtextField
     @Override
     public void actionPerformed(ActionEvent e) {
        //System.out.println(" Action performed : " + e.toString());
-       barcode += e.getActionCommand();
+       //barcode += e.getActionCommand();
+       barcodes.add(e.getActionCommand());
+       barcode = "";
        ((JTextField) e.getSource()).setText("");
         this.handleChar();
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

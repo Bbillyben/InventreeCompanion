@@ -6,7 +6,7 @@ package barcodeDecoder;
 
 import Inventree.item.StockItem;
 import barcode.barcode;
-import java.lang.String;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,12 +15,12 @@ import java.lang.String;
 public abstract class BarcodeDecoder {
     protected String type;
     
-    public boolean isSupported(String bc){
+    public boolean isSupported(ArrayList<String> bc){
         return false;
     }
     
-    public abstract void decodeBarcode(String bc);
-    public void decodeBarcode(String bc, boolean useQ){
+    public abstract void decodeBarcode(ArrayList<String> bc);
+    public void decodeBarcode(ArrayList<String> bc, boolean useQ){
         this.decodeBarcode(bc);
     }
     public abstract barcode getBarcode();
