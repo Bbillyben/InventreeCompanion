@@ -85,9 +85,27 @@ public class MenuView extends JMenuBar implements ListenerI, ActionListener, iVi
         JMenu file = new JMenu("File");
         file.setMnemonic( 'F' );
         
-        JMenuItem save = new JMenuItem(CONSTANT.ACTION_SAVE);
+        JMenuItem save = new JMenuItem("Save List");
+        save.setActionCommand(CONSTANT.ACTION_SAVE);
         save.setMnemonic( 'S' );
+        
+        
+        JMenu expM = new JMenu("Export");
+        expM.setMnemonic( 'F' );
+        
+        JMenuItem expCSV = new JMenuItem("Export CSV");
+        expCSV.setActionCommand(CONSTANT.ACTION_EXPORT_CSV);
+        expCSV.setMnemonic( 'C' );
+        
+        JMenuItem expEXC = new JMenuItem("Export Excel");
+        expEXC.setActionCommand(CONSTANT.ACTION_EXPORT_EXCEL);
+        expEXC.setMnemonic( 'C' );
+        
+        expM.add(expCSV);
+        expM.add(expEXC);
+        
         file.add(save);
+        file.add(expM);
         
         
         
@@ -108,6 +126,8 @@ public class MenuView extends JMenuBar implements ListenerI, ActionListener, iVi
         checkAll.addActionListener(this);
         removeDel.addActionListener(this);
         save.addActionListener(this);
+        expCSV.addActionListener(this);
+        expEXC.addActionListener(this);
     }
 
     @Override

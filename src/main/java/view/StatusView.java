@@ -65,6 +65,12 @@ public class StatusView extends JPanel implements iView, ConnectionListener, Inf
             case InfoEvent.SAVE_ERROR:
                 statusTxt.setText("<html><font style='color:red'>Error </font>saving Item list</html>" );
                 break;
+            case InfoEvent.GENERIC_ERROR:
+                statusTxt.setText("<html><font style='color:red'>"+((InfoEvent) e).info +"</font></html>");
+                break;
+            case InfoEvent.GENERIC_OK:
+                statusTxt.setText("<html><font style='color:green'>"+((InfoEvent) e).info +"</font></html>");
+                break;  
         }
     }
     

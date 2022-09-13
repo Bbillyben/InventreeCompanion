@@ -6,6 +6,7 @@
 package ben.inventreecompanion;
 
 import controller.CreatePartController;
+import controller.ExportController;
 import controller.InfoController;
 import controller.LoginController;
 import controller.MenuController;
@@ -21,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Model;
 import view.CreatePartView;
+import view.ExportView;
 import view.LoginView;
 import view.MenuView;
 import view.ParamView;
@@ -100,6 +102,11 @@ public class InventreeCompanion {
         CreatePartController cpC = new CreatePartController(model);
         CreatePartView cpV = new CreatePartView(cpC, frame);
         cpC.setView(cpV);
+        
+        // pour l'export
+        ExportController exC = new ExportController(model);
+        ExportView exV = new ExportView(exC, frame);
+        exC.setView(exV);
         
         
         // ajout des elements dans la frame

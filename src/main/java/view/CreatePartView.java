@@ -54,7 +54,7 @@ public class CreatePartView implements iView, SendListener, ParamListener{
     }
     @Override
     public void eventRecept(iEvent e) {
-        System.out.println("view.CreatePartView.eventRecept() "+e);
+        //System.out.println("view.CreatePartView.eventRecept() "+e);
         switch(e.type){
             case SendEvent.CREATE_ITEM_START:
                 startCreat(((SendEvent) e).item);
