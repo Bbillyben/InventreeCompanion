@@ -66,6 +66,44 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <taskdef />
+                <jarbundler />
+                <property />
+                <taskdef />
+                <launch4j>
+                  <config>
+                    <jre />
+                    <versionInfo />
+                  </config>
+                </launch4j>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.ultramixer.jarbundler</groupId>
+            <artifactId>jarbundler-core</artifactId>
+            <version>3.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>net.sf.launch4j</groupId>
+            <artifactId>launch4j</artifactId>
+            <version>3.14</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
   <properties>
