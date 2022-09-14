@@ -10,16 +10,19 @@ A basic decoder (without any transformation) is implemented.
 ### Barcode Scanning feature : 
 
 #### EAN-128 :
+
   - decode every item in EAN-128/GS1-128 barcode, but only use some of them as input for stock item, and implements equivalence between some : 
-        * EAN-NumberOfTradingUnit or EAN-NumberOfTheWaresInTheShippingUnit as EAN : principal identifyer, use to identify parts
-        * ExpiryDate_JJMMDD or DueDate_JJMMDD as Expiricy date
-        * Charge_Number or ProductModel as Batch number
-        * AmountInParts as number of part : there is a parameter to let you choose to use it or not.
+  
+        - EAN-NumberOfTradingUnit or EAN-NumberOfTheWaresInTheShippingUnit as EAN : principal identifyer, use to identify parts
+        - ExpiryDate_JJMMDD or DueDate_JJMMDD as Expiricy date
+        - Charge_Number or ProductModel as Batch number
+        - AmountInParts as number of part : there is a parameter to let you choose to use it or not.
+        
   - The decoder is parametered to use "#" char as separator instead of the non printable caracter, and the FNC1 as "]C1"
 
 
 #### Basic decoder :
-  - It will search for the entire alphanumeric code as identifyer.
+  - It will set the entire alphanumeric code as identifyer.
 
 
 
@@ -47,8 +50,8 @@ This panel is dedicated to parameters over the app. Every parameters will be sto
 ##### scan parameters : 
     - Second to wait before scan ending : If the barcode decoder accept multiple scan (see isMultiple() method of barcodedecoder), this set the number of second to wait before processing the barcode
     - radio button : 
-        * Force Distant Location : if a stock item is found with the barcode, the location of that stock item will be use instead of those defined in the scan panel
-        * Force Local Location : keep the location defined in the scan panel for the scanned item. If a stock item with the same barcode is found in an another location, it will consider the scanned item as a new stock item.
+        - Force Distant Location : if a stock item is found with the barcode, the location of that stock item will be use instead of those defined in the scan panel
+        - Force Local Location : keep the location defined in the scan panel for the scanned item. If a stock item with the same barcode is found in an another location, it will consider the scanned item as a new stock item.
 
 
 ##### App Parameters : 
@@ -65,9 +68,9 @@ This panel is dedicated to parameters over the app. Every parameters will be sto
 this is the panl used for scanning barcode and manage them. It is divided in 3 zones : 
 
     - Scan Mode : 
-        * to set the scan mode between : add (add a stock item), remove and transfert.
-        * to set the current location. In transfert mode, you will set the destination (transfert location) here as well
-        * Use barcode quantity checkbox : define if the quantity defined in the barcode will be used or not
+        - to set the scan mode between : add (add a stock item), remove and transfert.
+        - to set the current location. In transfert mode, you will set the destination (transfert location) here as well
+        - Use barcode quantity checkbox : define if the quantity defined in the barcode will be used or not
     - Barcode Status : here is the list of the scanned barcode. the newest at the top. the darkest column are editable.
         it will display informations collected in the Inventree server if the stock item or part is identified
     - Scan Area : This is the textfield that has to have the focus to scan. You can handwrite the code if needed (hit enter to validate the barcode).
@@ -78,10 +81,10 @@ This is the panel to send item to server, set new part or link barcode (EAN) to 
 
     - The two first are dedicated to stock item update (a stock item has been identified corrsponding to the barcode) and stock item creation (a part has been identified but no stock item).
     - the third one is dedicated to unknown items. 
-        * You could here create a new part (with minimal information). 
-        * link to an existing part.
-        * ::important:: The Manufacturer has to be set with a MPN corresponding to the barcode/EAN.
-        * as a new part or a link is created, the correspondng item will be transfert to one of the upper table.
+        - You could here create a new part (with minimal information). 
+        - link to an existing part.
+        - :warning: The Manufacturer has to be set with a MPN corresponding to the barcode/EAN.
+        - as a new part or a link is created, the correspondng item will be transfert to one of the upper table.
     - the last one is dedicated to error item. 
 
 The "Send to server" button will send the update and stock item creation to the server. 
@@ -93,11 +96,11 @@ A pop up window will appear displaying the advancement and the status of request
 There is several status displayed in the "status" column in the different panels. 
 Some few words about the information workflow. 
 
-    * the barcode is scanned and checked against current list of items already scanned. 
-    * If already scanned, add the quantity to the previous item
-    * If not already scanned, added to the queue to be checked in the server 
-    * it will check if the barcode/EAN is known in MPN (manufacturer part list), and SKU (suppliers part list)
-    * If a part is identified, it will check if a corresponding stock item exist, checking against batch number, location (if Force Local location ticked), expiry date
+    - the barcode is scanned and checked against current list of items already scanned. 
+    - If already scanned, add the quantity to the previous item
+    - If not already scanned, added to the queue to be checked in the server 
+    - it will check if the barcode/EAN is known in MPN (manufacturer part list), and SKU (suppliers part list)
+    - If a part is identified, it will check if a corresponding stock item exist, checking against batch number, location (if Force Local location ticked), expiry date
 
 start scanning status :
 
@@ -129,20 +132,20 @@ Error status :
 
 #### Upper Menu :
     - User :
-        * log out : to log out current user. it will then switch to the log panel
+        - log out : to log out current user. it will then switch to the log panel
     - Panels : to navigate between panels : 
-        * Scan 
-        * Send 
-        * Parameters
+        - Scan 
+        - Send 
+        - Parameters
     - Action 
-        * Update Params : to update lists from the server (updated at each app launch) : Stock Location, Supplyers and Manufacturers, Part list
-        * Check All Items : to relaunch a server check on all items
-        * Remove Sended, Error and Deleted : to remove items in error or deleted, or which has been send already
-        * Clean Stock list : to remove all items from the list
+        - Update Params : to update lists from the server (updated at each app launch) : Stock Location, Supplyers and Manufacturers, Part list
+        - Check All Items : to relaunch a server check on all items
+        - Remove Sended, Error and Deleted : to remove items in error or deleted, or which has been send already
+        - Clean Stock list : to remove all items from the list
     - File  
-        * Save List : to save the current list in "ext_file/currentList.ser"
-        * Export to CSV : to export current list to csv format (coma separated)
-        * Export to Excel : to export to Excel Format (xlsx)
+        - Save List : to save the current list in "ext_file/currentList.ser"
+        - Export to CSV : to export current list to csv format (coma separated)
+        - Export to Excel : to export to Excel Format (xlsx)
 
 
 
