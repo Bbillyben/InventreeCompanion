@@ -372,6 +372,15 @@ public class InventreeAPI {
     /* =================================================================== */
     /* -------------------------   FOR Barcode   ------------------------- */
     /* =================================================================== */
+    /**Search for a specific barcode,
+     * 
+     * @param invUrl
+     * @param token
+     * @param barcode
+     * @return JSONObject o fthe object found or null
+     * @throws IOException
+     * @throws AuthenticationException 
+     */
     public static JSONObject getBarcodeInfo(String invUrl, String token, String barcode) throws IOException, AuthenticationException{
         JSONObject bcData = new JSONObject();
         bcData.put("barcode", barcode);
@@ -380,7 +389,23 @@ public class InventreeAPI {
         //System.out.println("Inventree.InventreeAPI.getBarcodeInfo()  \n   -- response "+response);
         return check(response.status()) ? new JSONObject(response.body()):  null;
     }
-    
+    /**Assign a barcode to : 
+     * 'part', 'stockitem', 'stocklocation', 'supplierpart'
+     * 
+     * @param invUrl
+     * @param token
+     * @param bcAssJSO structure : { "part":id, "barcode":bc }
+     * @return
+     * @throws IOException
+     * @throws AuthenticationException 
+     */
+    public static int assignBarcode(String invUrl, String token, JSONObject bcAssJSO) throws IOException, AuthenticationException{
+        Request re = buildQuery(invUrl,"/api/barcode/link/", METHOD_POST,  "Token "+token, bcAssJSO);             
+        Response response =re.fetch();
+        int status = response.status();
+        return check(status) ? status :  0;
+    }
+        
     /* =================================================================== */
     // ------------------ gestion des status des réponses ----------------- //
     /* =================================================================== */

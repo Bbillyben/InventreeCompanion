@@ -562,8 +562,6 @@ public class APIConnector implements ListenerI{
             return;
         }
         boolean status= true;
-        
-        
 
         // check si part trouvé mais pas d'item dans le stock
         if(si.partitem != null && si.getId() == 0) {// si il y a une part mais pas d'id
@@ -641,7 +639,7 @@ public class APIConnector implements ListenerI{
      * @param si ths stock item to link with
      * @param jso the JSON of part description
      */
-    public void createPart(StockItem si, JSONObject jso){
+    public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplyer){
         JSONObject newPart = null;
          try {
            newPart = InventreeAPI.addPart(cleanURL(invURL), apiKey, jso);
@@ -656,10 +654,45 @@ public class APIConnector implements ListenerI{
             si.partitem.setId(newPart.getInt("pk"));
             si.setStatus(CONSTANT.STATUS_NEW_ITEM);
          }
+         
+         // assign barcode to part
+         JSONObject assJSO;
+         if(assignToPart){
+             assJSO = new JSONObject();
+             assJSO.put("part", si.partitem.getId());
+             assJSO.put("barcode", si.EAN);
+            try {
+                Integer status = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+            }catch (AuthenticationException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+            } catch (IOException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
+            }
+         }
+         // assign barcode to supplyer part
+         if(assigToSupplyer){
+             HashMap<String, String> search = new HashMap<>();
+             search.put("part", String.valueOf(si.partitem.getId()));
+            try {
+                JSONArray res = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey, search);
+                if(res != null){
+                    assJSO = new JSONObject();
+                    assJSO.put("supplierpart",  res.getJSONObject(0).getInt("pk"));
+                    assJSO.put("barcode", si.EAN);
+                    Integer status = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                }
+            }catch (AuthenticationException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+            } catch (IOException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
+            } 
+         }
+         
+         
          model.partCreated(si);
     }
     
-    public void linkPart(StockItem si, JSONArray jsa){
+    public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplyer){
         boolean status = true;
         if(!jsa.isNull(0)){
             int suppStatus=0;
@@ -685,6 +718,7 @@ public class APIConnector implements ListenerI{
             if( manStatus == 0)
                 status = false;
         }
+        
         model.linkCreated(si, status);
         
             
