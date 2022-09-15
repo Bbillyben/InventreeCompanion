@@ -287,6 +287,20 @@ public class InventreeAPI {
         return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
+     /**retrieve a specific part information from Company
+      * 
+      * @param invUrl
+      * @param token
+      * @param pk the identifier of the Company part (supplyer)
+      * @return
+      * @throws AuthenticationException
+      * @throws IOException 
+      */
+     public static JSONObject requestPartCompanyInfo(String invUrl, String token, Integer pk ) throws AuthenticationException, IOException{
+        Request re = buildQuery(invUrl,"/api/company/part/"+String.valueOf(pk)+"/", METHOD_GET,  "Token "+token, null, null);  
+        Response response =re.fetch();
+        return check(response.status()) ? new JSONObject(response.body()) :  null;
+    }
      /**Add a part to a supplier
       * 
       * @param invUrl
@@ -356,11 +370,25 @@ public class InventreeAPI {
     }
     
     /* =================================================================== */
+    /* -------------------------   FOR Barcode   ------------------------- */
+    /* =================================================================== */
+    public static JSONObject getBarcodeInfo(String invUrl, String token, String barcode) throws IOException, AuthenticationException{
+        JSONObject bcData = new JSONObject();
+        bcData.put("barcode", barcode);
+        Request re = buildQuery(invUrl,"/api/barcode/", METHOD_POST,  "Token "+token, bcData);             
+        Response response =re.fetch();
+        //System.out.println("Inventree.InventreeAPI.getBarcodeInfo()  \n   -- response "+response);
+        return check(response.status()) ? new JSONObject(response.body()):  null;
+    }
+    
+    /* =================================================================== */
     // ------------------ gestion des status des réponses ----------------- //
     /* =================================================================== */
     
     public static boolean check(int status) throws AuthenticationException{
          switch (status) {
+                case 400:
+                    return false;
                 case 401: // authentication error
                     throw new AuthenticationException("Invalid Credential") ;
                 case 404: // not found

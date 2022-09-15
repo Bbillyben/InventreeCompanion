@@ -345,24 +345,52 @@ public class APIConnector implements ListenerI{
         PartItem pi = new PartItem();
         si.partitem = pi;
         // test si on retrouve EAN chez un manufacturer
-        HashMap m = new HashMap();
-        
+         
         
         //m.put("IPN", si.EAN);
         
         
          try {
-            // test manufacturer
-            m.put("MPN", si.EAN);
-            jso = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
-           // test manufacturer
-           if(jso.length() == 0){
-               m.clear();
-               // test Supplier
-                m.put("SKU", si.EAN);
-                jso = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
-              
-           }
+             // test sur API barcode
+             obj = InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
+             
+             
+             // If not found in barcode, we search in MPN and SKU
+             if(obj == null || obj.has("error") ){
+                 jso = testBarcodeOnInternal(si);
+                if (jso.length() >0 ){
+                    obj = jso.getJSONObject(0);
+                    pi.setId(obj.getInt("part"));
+                    updatePartItemData(si, forceStockLoc);
+                    return;
+                 }
+             }else{
+                 // get type of element with barcode : 
+                 if(obj.has("part")){// si c'est une part
+                     pi.setId(obj.getJSONObject("part").getInt("pk"));
+                     updatePartItemData(si, forceStockLoc);
+                     return;
+                 }else if(obj.has("supplierpart")){// si c'est un fournisseur
+                     Integer pk = obj.getJSONObject("supplierpart").getInt("pk");
+                     obj=InventreeAPI.requestPartCompanyInfo(cleanURL(invURL), apiKey,pk);
+                     System.out.println("supplyer info :"+obj);
+                    if (obj != null ){
+                        pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
+                        updatePartItemData(si, forceStockLoc);
+                        return;
+                     }
+                     
+                 }else if(obj.has("stockitem")){// si c'est un stockitem
+                     Integer pk = obj.getJSONObject("stockitem").getInt("pk");
+                     
+                     obj=InventreeAPI.requestStockItemInfo(cleanURL(invURL), apiKey, pk);
+                     if (obj != null ){
+                        pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
+                        updatePartItemData(si, forceStockLoc);
+                        return;
+                     }
+                 }
+             }
                
         } catch (AuthenticationException ex) {
             si.setStatus(CONSTANT.STATUS_NEW_ITEM);
@@ -373,15 +401,25 @@ public class APIConnector implements ListenerI{
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
             return;
         }
-        // si on a une touche
-        if (jso.length() >0 ){
-             obj = jso.getJSONObject(0);
-            pi.setId(obj.getInt("part"));
-            updatePartItemData(si, forceStockLoc);
-        }else{
+        // if nothing has been found => new part
+        if (si.partitem.getId()==0){
             si.setStatus(CONSTANT.STATUS_NEW_PART);
             model.updateStockItem(si);
         } 
+    }
+    private JSONArray testBarcodeOnInternal(StockItem si) throws AuthenticationException, IOException{
+        JSONArray jso;
+        HashMap m = new HashMap();
+        m.put("MPN", si.EAN);
+        jso = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
+        if(jso.length() == 0){
+               m.clear();
+               // test Supplier
+                m.put("SKU", si.EAN);
+                jso = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
+              
+           }
+        return jso;       
     }
     
     public void updatePartItemData(StockItem si,String forceStockLoc){
