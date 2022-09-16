@@ -5,7 +5,6 @@
 package controller;
 
 import Inventree.item.StockItem;
-import events.iEvent;
 import listeners.ParamListener;
 import listeners.SendListener;
 import model.Model;
@@ -27,7 +26,9 @@ public class CreatePartController extends iController{
         int supplierId,
         String sku, 
         int manuId, 
-        String mpn){
+        String mpn,
+        Boolean assignToPart,
+        Boolean assigToSupplyer){
          
          // creation du JSON array avec
          // en 0 le supplyer
@@ -38,7 +39,7 @@ public class CreatePartController extends iController{
          if(supplierId !=0){
              jso = new JSONObject();
              jso.put("part", subPartId);
-             jso.put("supplier", supplierId);
+                jso.put("supplier", supplierId);
              jso.put("SKU", sku);
          }
          jsa.put(jso);
@@ -54,7 +55,10 @@ public class CreatePartController extends iController{
 //         System.out.println(jsa);
 //         System.out.println(" jsa[0] :"+jsa.isNull(0));  
 //         System.out.println(" jsa[1] :"+jsa.isNull(1));
-         model.linkPart(si, jsa);
+
+        if(assignToPart)
+            si.partitem.setId(subPartId);
+         model.linkPart(si, jsa, assignToPart, assigToSupplyer);
          
      }
      
@@ -70,7 +74,9 @@ public class CreatePartController extends iController{
         int supplierId,
         String sku, 
         int manuId, 
-        String mpn){
+        String mpn,
+        Boolean assignToPart,
+        Boolean assigToSupplyer){
         
         JSONObject jso = new JSONObject();
         jso.put("category", catId);
@@ -95,7 +101,7 @@ public class CreatePartController extends iController{
         }
         
         jso.put("copy_category_parameters", true );
-        model.createPart(si, jso);
+        model.createPart(si, jso, assignToPart, assigToSupplyer);
         
         
     }

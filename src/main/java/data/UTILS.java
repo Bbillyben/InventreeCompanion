@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 import static view.element.LinkPartDialog.NULL_ITEM;
 
@@ -78,30 +79,41 @@ public class UTILS {
     // test sur des éléments typ textfield
     public static boolean checkTextField(JTextField tf){
         if(tf.getText().isEmpty() || tf.getText().isBlank()){
-            tf.setBorder(BorderFactory.createLineBorder(Color.RED));
+            setCheckBorder(tf, false);
             return false;
         }else{
             tf.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            setCheckBorder(tf, true);
             return true;
         }
     }
     
     public static boolean checkComboBox(JComboBox cb){
         InventreeItem iv = (InventreeItem) cb.getSelectedItem();
-        if(iv == null || iv.getId() == 0 || iv.getName() == NULL_ITEM){
-            cb.setBorder(BorderFactory.createLineBorder(Color.RED));
+        if(iv == null || iv.getId() == 0 || (iv.getName() == null ? NULL_ITEM == null : iv.getName().equals(NULL_ITEM))){
+            setCheckBorder(cb, false);
             return false;
         }else{
-            cb.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            setCheckBorder(cb, true);
             return true;
         }
+    }
+    
+    public static Boolean setCheckBorder(JComponent cmp, Boolean isOk){
+        if(isOk){
+            cmp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            
+        }else{
+            cmp.setBorder(BorderFactory.createLineBorder(Color.RED));
+        }
+        return isOk;
     }
     
     /**Constraint an int between 2 bornes
      * 
      * @param value current value
-     * @param min minimal value
-     * @param max maximale value
+     * @param minV minimal value
+     * @param maxV maximale value
      * @return 
      *      - value if min<value<max
      *      - min if value<min
