@@ -1,6 +1,6 @@
 # 16-09-2022 / Beta v.0.6 :
   * Fit with barcode api refactoring from Inventree 
-      * add barcode link to part, supplyer part
+      * add barcode link to part, Supplier part
       * remove barcode storage in MPN
   * update readme
 

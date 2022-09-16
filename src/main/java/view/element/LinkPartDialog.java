@@ -35,13 +35,13 @@ import javax.swing.JTextField;
 public class LinkPartDialog extends JDialog implements ActionListener{
     public static final String NULL_ITEM = "---"; 
     protected InventreeItemFilterCB subPartCB;
-    protected InventreeItemFilterCB supplyerCB;
-    protected JTextField supplyerSKU;
+    protected InventreeItemFilterCB SupplierCB;
+    protected JTextField SupplierSKU;
     protected InventreeItemFilterCB manufacturerCB;
     protected JTextField manufMPN;
     
     protected JCheckBox assignToPart;
-    protected JCheckBox assignToSupplyer;
+    protected JCheckBox assignToSupplier;
     protected JPanel assignBC;
     
     protected JButton saveBtn;
@@ -58,13 +58,13 @@ public class LinkPartDialog extends JDialog implements ActionListener{
     public void ini(StockItem si){
         currentStockItem = si;
 
-        supplyerSKU.setText(si.EAN);
+        SupplierSKU.setText(si.EAN);
         manufMPN.setText(si.EAN);
         subPartCB.setSelectedIndex(0);
-        supplyerCB.setSelectedIndex(0);
+        SupplierCB.setSelectedIndex(0);
         
         assignToPart.setSelected(false);
-        assignToSupplyer.setSelected(true);
+        assignToSupplier.setSelected(true);
     }
     private void startSaveProcess(){
         boolean status = true;
@@ -75,27 +75,27 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         if(!UTILS.checkTextField(manufMPN))
             status = false;*/
         /*
-        if(!UTILS.checkTextField(supplyerSKU))
+        if(!UTILS.checkTextField(SupplierSKU))
             status = false;
-        if(!UTILS.checkComboBox(supplyerCB)){
+        if(!UTILS.checkComboBox(SupplierCB)){
             if(!UTILS.checkComboBox(manufacturerCB)){
                 status = false;
             }else{
-                 supplyerCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                 SupplierCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             }
          }else{
             manufacturerCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }*/
-        if(!assignToPart.isSelected() && !assignToSupplyer.isSelected()){
+        if(!assignToPart.isSelected() && !assignToSupplier.isSelected()){
             UTILS.setCheckBorder(assignBC, false);
              status = false;
         }else{
             UTILS.setCheckBorder(assignBC, true);
         }
         
-       if(assignToSupplyer.isSelected()){
+       if(assignToSupplier.isSelected()){
            System.out.println("YEAHH ");
-           Boolean test = UTILS.checkComboBox(supplyerCB);
+           Boolean test = UTILS.checkComboBox(SupplierCB);
            UTILS.setCheckBorder(assignBC,  test);
            status = status && test; 
        }
@@ -108,12 +108,12 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         controller.linkPart(
                 currentStockItem,
                 ((InventreeItem) subPartCB.getSelectedItem()).getId(),
-                ((InventreeItem) supplyerCB.getSelectedItem()).getId(),
-                supplyerSKU.getText(),
+                ((InventreeItem) SupplierCB.getSelectedItem()).getId(),
+                SupplierSKU.getText(),
                 ((InventreeItem) manufacturerCB.getSelectedItem()).getId(),
                 manufMPN.getText(),
                 assignToPart.isSelected(),
-                assignToSupplyer.isSelected()
+                assignToSupplier.isSelected()
         );
         
            
@@ -128,12 +128,12 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         }
         subPartCB.init();
         
-        supplyerCB.removeAllItems();
-        supplyerCB.addItem(new InventreeItem(NULL_ITEM, 0));
+        SupplierCB.removeAllItems();
+        SupplierCB.addItem(new InventreeItem(NULL_ITEM, 0));
         for(CompanyItem sl : ivl.suppliers){
-            supplyerCB.addItem(sl);
+            SupplierCB.addItem(sl);
         }
-        supplyerCB.init();
+        SupplierCB.init();
         manufacturerCB.removeAllItems();
         manufacturerCB.addItem(new InventreeItem(NULL_ITEM, 0));
         for(CompanyItem sl : ivl.manufacturers){
@@ -144,25 +144,25 @@ public class LinkPartDialog extends JDialog implements ActionListener{
     private void buildView(){
         int txtFSize = 20;
         subPartCB = new InventreeItemFilterCB();
-        supplyerCB = new InventreeItemFilterCB();
-        supplyerSKU = new JTextField(txtFSize);
+        SupplierCB = new InventreeItemFilterCB();
+        SupplierSKU = new JTextField(txtFSize);
         manufacturerCB = new InventreeItemFilterCB();
         manufMPN = new JTextField(txtFSize);
         saveBtn = new JButton("Save");
         
         assignToPart=new JCheckBox("Assign Barcode to Part");
-        assignToSupplyer=new JCheckBox("Assign Barcode to Supplyer");
+        assignToSupplier=new JCheckBox("Assign Barcode to Supplier");
         // pour panneau assignement
         assignBC = new JPanel();
         assignBC.setLayout(new BoxLayout(assignBC, BoxLayout.PAGE_AXIS));
         assignBC.add(assignToPart);
-        assignBC.add(assignToSupplyer);
+        assignBC.add(assignToSupplier);
         
         //min size txtfield
         Dimension txtDim = new Dimension(200,20);
         subPartCB.setMinimumSize(txtDim);
-        supplyerCB.setMinimumSize(txtDim);
-        supplyerSKU.setMinimumSize(txtDim);
+        SupplierCB.setMinimumSize(txtDim);
+        SupplierSKU.setMinimumSize(txtDim);
         manufacturerCB.setMinimumSize(txtDim);
         manufMPN.setMinimumSize(txtDim);
         txtDim = new Dimension(200,50);
@@ -195,9 +195,9 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         cst.gridy=i;
         jp.add(subPartCB, cst);
         cst.gridy = (i+=2);
-        jp.add(supplyerCB, cst);
+        jp.add(SupplierCB, cst);
         cst.gridy = (i+=2);
-        jp.add(supplyerSKU, cst);
+        jp.add(SupplierSKU, cst);
         cst.gridy = (i+=2);
         jp.add(manufacturerCB, cst);
         cst.gridy = (i+=2);

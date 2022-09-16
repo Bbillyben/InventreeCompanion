@@ -47,8 +47,8 @@ public class CreatePartDialog extends JDialog implements ActionListener{
     protected InventreeItemFilterCB defLocation;
     protected JSpinner minNum=new JSpinner();
     protected JCheckBox isTemplateCB= new JCheckBox();
-    protected InventreeItemFilterCB supplyerCB;
-    protected JTextField supplyerSKU;
+    protected InventreeItemFilterCB SupplierCB;
+    protected JTextField SupplierSKU;
     protected InventreeItemFilterCB manufacturerCB;
     protected JTextField manufMPN;
     protected JButton saveBtn;
@@ -56,7 +56,7 @@ public class CreatePartDialog extends JDialog implements ActionListener{
     protected StockItem currentStockItem;
     
     protected JCheckBox assignToPart;
-    protected JCheckBox assignToSupplyer;
+    protected JCheckBox assignToSupplier;
     protected JPanel assignBC;
     
     protected CreatePartController controller;
@@ -78,17 +78,17 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         descTxt.setText("");
         defLocation.setSelectedId(String.valueOf(si.stocklocation.getId()));
         isTemplateCB.setSelected(true);
-        supplyerSKU.setText(si.EAN);
+        SupplierSKU.setText(si.EAN);
         manufMPN.setText(si.EAN);
         
         categoryCB.setSelectedIndex(0);
         subPartCB.setSelectedIndex(0);
         minNum.setValue(0);
-        supplyerCB.setSelectedIndex(0);
+        SupplierCB.setSelectedIndex(0);
         manufacturerCB.setSelectedIndex(0);   
         
         assignToPart.setSelected(false);
-        assignToSupplyer.setSelected(true);
+        assignToSupplier.setSelected(true);
         
     }
     private void startSaveProcess(){
@@ -103,16 +103,16 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         /*if(!UTILS.checkComboBox(manufacturerCB))
                 status = false;*/
        
-        if(!assignToPart.isSelected() && !assignToSupplyer.isSelected()){
+        if(!assignToPart.isSelected() && !assignToSupplier.isSelected()){
             UTILS.setCheckBorder(assignBC, false);
              status = false;
         }else{
             UTILS.setCheckBorder(assignBC, true);
         }
         
-        if(assignToSupplyer.isSelected()){
+        if(assignToSupplier.isSelected()){
            System.out.println("YEAHH ");
-           Boolean test = UTILS.checkComboBox(supplyerCB);
+           Boolean test = UTILS.checkComboBox(SupplierCB);
            UTILS.setCheckBorder(assignBC,  test);
            status = status && test; 
        }
@@ -133,12 +133,12 @@ public class CreatePartDialog extends JDialog implements ActionListener{
                 ((InventreeItem) defLocation.getSelectedItem()).getId(),
                 (int) minNum.getValue(),
                 isTemplateCB.isSelected(),
-                ((InventreeItem) supplyerCB.getSelectedItem()).getId(),
-                supplyerSKU.getText(),
+                ((InventreeItem) SupplierCB.getSelectedItem()).getId(),
+                SupplierSKU.getText(),
                 ((InventreeItem) manufacturerCB.getSelectedItem()).getId(),
                 manufMPN.getText(),
                 assignToPart.isSelected(),
-                assignToSupplyer.isSelected()
+                assignToSupplier.isSelected()
         );
         
            
@@ -163,12 +163,12 @@ public class CreatePartDialog extends JDialog implements ActionListener{
             defLocation.addItem(sl);
         }
         defLocation.init();
-        supplyerCB.removeAllItems();
-        supplyerCB.addItem(new InventreeItem(NULL_ITEM, 0));
+        SupplierCB.removeAllItems();
+        SupplierCB.addItem(new InventreeItem(NULL_ITEM, 0));
         for(CompanyItem sl : ivl.suppliers){
-            supplyerCB.addItem(sl);
+            SupplierCB.addItem(sl);
         }
-        supplyerCB.init();
+        SupplierCB.init();
         manufacturerCB.removeAllItems();
         manufacturerCB.addItem(new InventreeItem(NULL_ITEM, 0));
         for(CompanyItem sl : ivl.manufacturers){
@@ -187,18 +187,18 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         SpinnerNumberModel spinMod =new SpinnerNumberModel(0,0,200,1);
         minNum=new JSpinner(spinMod);
         isTemplateCB= new JCheckBox();
-        supplyerCB = new InventreeItemFilterCB();
-        supplyerSKU = new JTextField(txtFSize);
+        SupplierCB = new InventreeItemFilterCB();
+        SupplierSKU = new JTextField(txtFSize);
         manufacturerCB = new InventreeItemFilterCB();
         manufMPN = new JTextField(txtFSize);
         saveBtn = new JButton("Save");
         assignToPart=new JCheckBox("Assign Barcode to Part");
-        assignToSupplyer=new JCheckBox("Assign Barcode to Supplyer");
+        assignToSupplier=new JCheckBox("Assign Barcode to Supplier");
         // pour panneau assignement
         assignBC = new JPanel();
         assignBC.setLayout(new BoxLayout(assignBC, BoxLayout.PAGE_AXIS));
         assignBC.add(assignToPart);
-        assignBC.add(assignToSupplyer);
+        assignBC.add(assignToSupplier);
         
         //min size txtfield
         Dimension txtDim = new Dimension(200,20);
@@ -210,8 +210,8 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         defLocation.setMinimumSize(txtDim);
         minNum.setMinimumSize(txtDim);
         isTemplateCB.setMinimumSize(txtDim);
-        supplyerCB.setMinimumSize(txtDim);
-        supplyerSKU.setMinimumSize(txtDim);
+        SupplierCB.setMinimumSize(txtDim);
+        SupplierSKU.setMinimumSize(txtDim);
         manufacturerCB.setMinimumSize(txtDim);
         manufMPN.setMinimumSize(txtDim);
         txtDim = new Dimension(200,50);
@@ -273,9 +273,9 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         cst.gridy = (i+=2);
         jp.add(isTemplateCB, cst);
         cst.gridy = (i+=2);
-        jp.add(supplyerCB, cst);
+        jp.add(SupplierCB, cst);
         cst.gridy = (i+=2);
-        jp.add(supplyerSKU, cst);
+        jp.add(SupplierSKU, cst);
         cst.gridy = (i+=2);
         jp.add(manufacturerCB, cst);
         cst.gridy = (i+=2);
