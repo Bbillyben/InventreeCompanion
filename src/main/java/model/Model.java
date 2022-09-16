@@ -299,8 +299,8 @@ public class Model {
         this.dispatchEvent(SendListener.class, e);
         
     }
-    public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplyer){
-        apiConn.createPart(si, jso, assignToPart, assigToSupplyer);
+    public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplier){
+        apiConn.createPart(si, jso, assignToPart, assigToSupplier);
     }
     public void partCreated(StockItem si){
         SendEvent e;
@@ -327,8 +327,8 @@ public class Model {
         this.dispatchEvent(SendListener.class, e);
         
     }
-    public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplyer){
-        apiConn.linkPart(si, jsa, assignToPart, assigToSupplyer);
+    public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplier){
+        apiConn.linkPart(si, jsa, assignToPart, assigToSupplier);
     }
     public void linkCreated(StockItem si, boolean status){
         SendEvent e;

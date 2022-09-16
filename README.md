@@ -137,7 +137,7 @@ Error status :
         - Send 
         - Parameters
     - Action 
-        - Update Params : to update lists from the server (updated at each app launch) : Stock Location, Supplyers and Manufacturers, Part list
+        - Update Params : to update lists from the server (updated at each app launch) : Stock Location, Suppliers and Manufacturers, Part list
         - Check All Items : to relaunch a server check on all items
         - Remove Sended, Error and Deleted : to remove items in error or deleted, or which has been send already
         - Clean Stock list : to remove all items from the list

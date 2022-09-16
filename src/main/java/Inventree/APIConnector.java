@@ -373,7 +373,7 @@ public class APIConnector implements ListenerI{
                  }else if(obj.has("supplierpart")){// si c'est un fournisseur
                      Integer pk = obj.getJSONObject("supplierpart").getInt("pk");
                      obj=InventreeAPI.requestPartCompanyInfo(cleanURL(invURL), apiKey,pk);
-                     System.out.println("supplyer info :"+obj);
+                     System.out.println("Supplier info :"+obj);
                     if (obj != null ){
                         pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
                         updatePartItemData(si, forceStockLoc);
@@ -639,7 +639,7 @@ public class APIConnector implements ListenerI{
      * @param si ths stock item to link with
      * @param jso the JSON of part description
      */
-    public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplyer){
+    public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplier){
         JSONObject newPart = null;
          try {
            newPart = InventreeAPI.addPart(cleanURL(invURL), apiKey, jso);
@@ -669,8 +669,8 @@ public class APIConnector implements ListenerI{
                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
             }
          }
-         // assign barcode to supplyer part
-         if(assigToSupplyer){
+         // assign barcode to Supplier part
+         if(assigToSupplier){
              HashMap<String, String> search = new HashMap<>();
              search.put("part", String.valueOf(si.partitem.getId()));
             try {
@@ -692,7 +692,7 @@ public class APIConnector implements ListenerI{
          model.partCreated(si);
     }
     
-    public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplyer){
+    public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplier){
         boolean status = true;
         JSONObject suppPart=null;
         JSONObject assJSO;
@@ -734,7 +734,7 @@ public class APIConnector implements ListenerI{
             }
         }
         
-        if(assigToSupplyer && suppPart != null){
+        if(assigToSupplier && suppPart != null){
             assJSO = new JSONObject();
             assJSO.put("supplierpart",  suppPart.getInt("pk"));
             assJSO.put("barcode", si.EAN);

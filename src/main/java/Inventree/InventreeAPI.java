@@ -291,7 +291,7 @@ public class InventreeAPI {
       * 
       * @param invUrl
       * @param token
-      * @param pk the identifier of the Company part (supplyer)
+      * @param pk the identifier of the Company part (Supplier)
       * @return
       * @throws AuthenticationException
       * @throws IOException 

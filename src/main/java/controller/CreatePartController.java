@@ -28,10 +28,10 @@ public class CreatePartController extends iController{
         int manuId, 
         String mpn,
         Boolean assignToPart,
-        Boolean assigToSupplyer){
+        Boolean assigToSupplier){
          
          // creation du JSON array avec
-         // en 0 le supplyer
+         // en 0 le Supplier
          // en 1 le manufacturer 
          // null si pas 
          JSONArray jsa = new JSONArray();
@@ -58,7 +58,7 @@ public class CreatePartController extends iController{
 
         if(assignToPart)
             si.partitem.setId(subPartId);
-         model.linkPart(si, jsa, assignToPart, assigToSupplyer);
+         model.linkPart(si, jsa, assignToPart, assigToSupplier);
          
      }
      
@@ -76,7 +76,7 @@ public class CreatePartController extends iController{
         int manuId, 
         String mpn,
         Boolean assignToPart,
-        Boolean assigToSupplyer){
+        Boolean assigToSupplier){
         
         JSONObject jso = new JSONObject();
         jso.put("category", catId);
@@ -101,7 +101,7 @@ public class CreatePartController extends iController{
         }
         
         jso.put("copy_category_parameters", true );
-        model.createPart(si, jso, assignToPart, assigToSupplyer);
+        model.createPart(si, jso, assignToPart, assigToSupplier);
         
         
     }
