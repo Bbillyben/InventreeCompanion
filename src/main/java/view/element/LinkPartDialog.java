@@ -180,11 +180,11 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         cst.gridy = (i+=2);
         jp.add(new JLabel("Supplier"), cst);
         cst.gridy = (i+=2);
-        jp.add(new JLabel("Supplier Id (set as barcode)"), cst);
+        jp.add(new JLabel("Supplier Id"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer"), cst);
         cst.gridy = (i+=2);
-        jp.add(new JLabel("Manufacturer Id (set as barcode)"), cst);
+        jp.add(new JLabel("Manufacturer Id"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Barcode Assignement"), cst);
         
