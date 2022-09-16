@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ben.inventreecompanion</groupId>
   <artifactId>InventreeCompanion</artifactId>
-  <version>beta_0.5</version>
+  <version>beta_0.6</version>
   <build>
     <plugins>
       <plugin>
@@ -87,6 +87,8 @@
                     <versionInfo />
                   </config>
                 </launch4j>
+                <zip />
+                <delete />
               </target>
             </configuration>
           </execution>

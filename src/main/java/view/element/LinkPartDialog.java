@@ -19,7 +19,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +39,11 @@ public class LinkPartDialog extends JDialog implements ActionListener{
     protected JTextField supplyerSKU;
     protected InventreeItemFilterCB manufacturerCB;
     protected JTextField manufMPN;
+    
+    protected JCheckBox assignToPart;
+    protected JCheckBox assignToSupplyer;
+    protected JPanel assignBC;
+    
     protected JButton saveBtn;
     
     protected StockItem currentStockItem;
@@ -55,15 +62,18 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         manufMPN.setText(si.EAN);
         subPartCB.setSelectedIndex(0);
         supplyerCB.setSelectedIndex(0);
+        
+        assignToPart.setSelected(false);
+        assignToSupplyer.setSelected(true);
     }
     private void startSaveProcess(){
         boolean status = true;
         if(!UTILS.checkComboBox(subPartCB))
             status = false;
-        if(!UTILS.checkComboBox(manufacturerCB))
+       /* if(!UTILS.checkComboBox(manufacturerCB))
                 status = false;
         if(!UTILS.checkTextField(manufMPN))
-            status = false;
+            status = false;*/
         /*
         if(!UTILS.checkTextField(supplyerSKU))
             status = false;
@@ -76,6 +86,19 @@ public class LinkPartDialog extends JDialog implements ActionListener{
          }else{
             manufacturerCB.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }*/
+        if(!assignToPart.isSelected() && !assignToSupplyer.isSelected()){
+            UTILS.setCheckBorder(assignBC, false);
+             status = false;
+        }else{
+            UTILS.setCheckBorder(assignBC, true);
+        }
+        
+       if(assignToSupplyer.isSelected()){
+           System.out.println("YEAHH ");
+           Boolean test = UTILS.checkComboBox(supplyerCB);
+           UTILS.setCheckBorder(assignBC,  test);
+           status = status && test; 
+       }
         
         if(!status){
             JOptionPane.showMessageDialog(this, "Some Required Information are missing");
@@ -88,7 +111,9 @@ public class LinkPartDialog extends JDialog implements ActionListener{
                 ((InventreeItem) supplyerCB.getSelectedItem()).getId(),
                 supplyerSKU.getText(),
                 ((InventreeItem) manufacturerCB.getSelectedItem()).getId(),
-                manufMPN.getText()
+                manufMPN.getText(),
+                assignToPart.isSelected(),
+                assignToSupplyer.isSelected()
         );
         
            
@@ -125,6 +150,14 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         manufMPN = new JTextField(txtFSize);
         saveBtn = new JButton("Save");
         
+        assignToPart=new JCheckBox("Assign Barcode to Part");
+        assignToSupplyer=new JCheckBox("Assign Barcode to Supplyer");
+        // pour panneau assignement
+        assignBC = new JPanel();
+        assignBC.setLayout(new BoxLayout(assignBC, BoxLayout.PAGE_AXIS));
+        assignBC.add(assignToPart);
+        assignBC.add(assignToSupplyer);
+        
         //min size txtfield
         Dimension txtDim = new Dimension(200,20);
         subPartCB.setMinimumSize(txtDim);
@@ -132,6 +165,8 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         supplyerSKU.setMinimumSize(txtDim);
         manufacturerCB.setMinimumSize(txtDim);
         manufMPN.setMinimumSize(txtDim);
+        txtDim = new Dimension(200,50);
+        assignBC.setMinimumSize(txtDim);
         // panel
         JPanel jp = new JPanel(new GridBagLayout());
         GridBagConstraints cst = new GridBagConstraints();
@@ -145,14 +180,16 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         cst.gridy = (i+=2);
         jp.add(new JLabel("Supplier"), cst);
         cst.gridy = (i+=2);
-        jp.add(new JLabel("Supplier Id (set as barcode)"), cst);
+        jp.add(new JLabel("Supplier Id"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer"), cst);
         cst.gridy = (i+=2);
-        jp.add(new JLabel("Manufacturer Id (set as barcode)"), cst);
+        jp.add(new JLabel("Manufacturer Id"), cst);
         cst.gridy = (i+=2);
+        jp.add(new JLabel("Barcode Assignement"), cst);
         
         cst.anchor = GridBagConstraints.WEST;
+        cst.fill = GridBagConstraints.HORIZONTAL;
         i=0;
         cst.gridx=1;
         cst.gridy=i;
@@ -165,6 +202,8 @@ public class LinkPartDialog extends JDialog implements ActionListener{
         jp.add(manufacturerCB, cst);
         cst.gridy = (i+=2);
         jp.add(manufMPN, cst);
+        cst.gridy = (i+=2);
+        jp.add(assignBC, cst); 
         
         cst.anchor=GridBagConstraints.EAST;
         cst.gridy=(i+=1);

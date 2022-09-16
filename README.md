@@ -28,8 +28,7 @@ A basic decoder (without any transformation) is implemented.
 
 other barcodeDecoder could bee added (extends [BarcodeDecoder.java](https://github.com/Bbillyben/InventreeCompanion/blob/main/src/main/java/barcodeDecoder/BarcodeDecoder.java))
 
-::danger:: at that time, barcode are not linked to parts in Inventree system, this companion  reference barcode in a Manufacturer entry, via MPN.
-it will be updated as it will be implemented in Inventree.
+Barcode can belinked directly to part or to supplier item.
 
 
 ### Use :
@@ -83,7 +82,7 @@ This is the panel to send item to server, set new part or link barcode (EAN) to 
     - the third one is dedicated to unknown items. 
         - You could here create a new part (with minimal information). 
         - link to an existing part.
-        - :warning: The Manufacturer has to be set with a MPN corresponding to the barcode/EAN.
+        - You can choose wether you want to link barcode to part or Supplie Item. Be carefull, it will overwritten part barcode if previously defined. By default it's set to supplier item.
         - as a new part or a link is created, the correspondng item will be transfert to one of the upper table.
     - the last one is dedicated to error item. 
 
@@ -99,7 +98,7 @@ Some few words about the information workflow.
     - the barcode is scanned and checked against current list of items already scanned. 
     - If already scanned, add the quantity to the previous item
     - If not already scanned, added to the queue to be checked in the server 
-    - it will check if the barcode/EAN is known in MPN (manufacturer part list), and SKU (suppliers part list)
+    - it will check if the barcode/EAN is known. If not found in barcode, it will look into MPN (manufacturer part list), and SKU (suppliers part list)
     - If a part is identified, it will check if a corresponding stock item exist, checking against batch number, location (if Force Local location ticked), expiry date
 
 start scanning status :
