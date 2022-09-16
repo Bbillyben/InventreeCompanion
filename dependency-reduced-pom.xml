@@ -87,6 +87,8 @@
                     <versionInfo />
                   </config>
                 </launch4j>
+                <zip />
+                <delete />
               </target>
             </configuration>
           </execution>

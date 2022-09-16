@@ -101,7 +101,7 @@
                                     classname="net.sf.launch4j.ant.Launch4jTask" 
                                     classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
                             <launch4j>
-                                <config headerType="gui" outfile="${project.build.directory}/${project.artifactId}-${project.version}.exe"
+                                <config headerType="gui" outfile="${project.build.directory}/${project.artifactId}-${project.version}_win32_64.exe"
                                         dontWrapJar="false" jarPath="${project.build.directory}/${project.artifactId}-${project.version}.jar"
                                         jar="${project.build.directory}/${project.artifactId}-${project.version}.jar"
                                         chdir="." priority="normal"
@@ -123,6 +123,14 @@
                                                  originalFilename="${project.artifactId}-${project.version}.exe" />
                                 </config>
                             </launch4j>
+                            
+                            <zip basedir="${project.build.directory}" 
+                                 destfile="${project.build.directory}/InventreeCompanion-${project.version}_macos.zip" 
+                                 includes="InventreeCompanion-${project.version}.app/**"
+                            />
+                            <delete dir="${project.build.directory}/InventreeCompanion-${project.version}.app"/>
+
+
                       </target>
                     </configuration>
                   </execution>

@@ -248,7 +248,7 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         cst.gridy = (i+=2);
         jp.add(new JLabel("Manufacturer"), cst);
         cst.gridy = (i+=2);
-        jp.add(new JLabel("Manufacturer Id (set as barcode)"), cst);
+        jp.add(new JLabel("Manufacturer Id"), cst);
         cst.gridy = (i+=2);
         jp.add(new JLabel("Barcode Assignement"), cst);
         
