@@ -310,12 +310,12 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static int addSupplierPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
+     public static JSONObject addSupplierPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
          
          Request re = buildQuery(invUrl,"/api/company/part/", METHOD_POST,  "Token "+token, jso);  
          Response response =re.fetch();
          int status = response.status();
-         return check(status) ? status :  0;
+         return check(status) ? new JSONObject(response.body()) :  null;
      }
      
      /**Add a part to a manufacturer

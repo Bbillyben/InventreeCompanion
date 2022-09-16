@@ -694,16 +694,17 @@ public class APIConnector implements ListenerI{
     
     public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplyer){
         boolean status = true;
+        JSONObject suppPart=null;
+        JSONObject assJSO;
         if(!jsa.isNull(0)){
-            int suppStatus=0;
             try {
-                suppStatus = InventreeAPI.addSupplierPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(0));
+                suppPart = InventreeAPI.addSupplierPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(0));
             } catch (AuthenticationException ex) {
                  model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
             }
-            if(suppStatus == 0)
+            if(suppPart == null)
                 status = false;
         }
         if(!jsa.isNull(1)){
@@ -717,6 +718,34 @@ public class APIConnector implements ListenerI{
             }
             if( manStatus == 0)
                 status = false;
+        }
+        
+        if(assignToPart && si.partitem.getId() !=0){
+            assJSO = new JSONObject();
+            assJSO.put("part",  si.partitem.getId());
+            assJSO.put("barcode", si.EAN);
+            
+            try {
+                Integer statusBC = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+            } catch (AuthenticationException ex) {
+                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+            } catch (IOException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
+            }
+        }
+        
+        if(assigToSupplyer && suppPart != null){
+            assJSO = new JSONObject();
+            assJSO.put("supplierpart",  suppPart.getInt("pk"));
+            assJSO.put("barcode", si.EAN);
+            
+            try {
+                Integer statusBC = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+            } catch (AuthenticationException ex) {
+                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+            } catch (IOException ex) {
+                model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
+            }
         }
         
         model.linkCreated(si, status);
