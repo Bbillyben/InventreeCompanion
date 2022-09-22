@@ -10,6 +10,8 @@ import model.Model;
 /**
  *
  * @author blegendre
+ * 
+ * This is the worker in charge of sending the StockItem to the server
  */
 public class SendWorker extends Thread {
     private final Model model;

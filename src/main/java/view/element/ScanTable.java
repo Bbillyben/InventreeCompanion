@@ -3,7 +3,6 @@
  */
 package view.element;
 
-import view.model.StockItemModel;
 import Inventree.item.InventreeLists;
 import Inventree.item.StockLocation;
 import data.CONSTANT;
@@ -44,6 +43,7 @@ import view.element.renderer.table.IntegerEditor;
 import view.element.renderer.table.StatusRenderer;
 import view.element.renderer.table.StockLocationTableEditor;
 import view.element.renderer.table.StockLocationTableRenderer;
+import view.model.StockItemModel;
 /**
  *
  * @author blegendre
@@ -208,7 +208,6 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("view.element.ScanTable.actionPerformed() cmd :"+e.getActionCommand() );
         if(tmpval!=null){
             PopUpActionEvent ev =new PopUpActionEvent(this, PopUpActionEvent.ACTION_COPY, tmpval);
             

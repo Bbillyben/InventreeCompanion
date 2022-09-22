@@ -44,8 +44,8 @@ public class CONSTANT {
      public static final String SCAN_FORCE_LOC_DISTANT="sync_dist";// force avec le Stocklocation serveur
      public static final String SCAN_FORCE_LOC_LOCAL="sync_local";// force avec le Stocklocation défini dans l'app
     
-    // =================  NAVIGATION  / MENU  ================  //
-    // =======================================================  //
+    // =================  NAVIGATION  / MENU / ACTION ================  //
+    // ===============================================================  //
     public static final String PAGE_PARAM = "Parameters";
     public static final String PAGE_SCAN = "Scan";
     public static final String PAGE_LOGIN = "login";
@@ -69,7 +69,9 @@ public class CONSTANT {
     
     public static final String ACTION_EXPORT_CSV = "export_CSV";
     public static final String ACTION_EXPORT_EXCEL = "export_Excel";
-// =================  BARCODE  ================  //
+    
+    
+    // =================  BARCODE  ================  //
     // ===============================================  //
     public static final String STATUS_OK = "ok"; // general purpose status
     public static final String STATUS_ERROR = "error"; // general purpose status
@@ -94,6 +96,9 @@ public class CONSTANT {
     
     public static final String SENDABLE = "sendable_item"; // utilisé pour tout les items qui sont envoyable au server, a utiliser avec le Set SENDABLE_STATUS
     
+    /**
+     * A Set of status that can be edit in table
+     */
     public static final Set<String> MODIFIABLE_STATUS= Set.of(
         STATUS_PENDING, 
         STATUS_NEW_ITEM,
@@ -105,10 +110,16 @@ public class CONSTANT {
         STATUS_ERR_SAME_LOC,
         STATUS_ERR_LOC
     );
+     /**
+     * A Set of status that can be send to distant server
+     */
     public static final Set<String> SENDABLE_STATUS = Set.of(
         STATUS_ITEM_FOUND,
         STATUS_NEW_ITEM
     );
+     /**
+     * A Set of status representing errors, and being colorized in table
+     */
     public static final Set<String> ERROR_STATUS= Set.of(
         STATUS_ERROR_EAN,
         STATUS_SEND_ERROR,
@@ -117,6 +128,9 @@ public class CONSTANT {
         STATUS_ERR_SAME_LOC,
         STATUS_ERR_LOC
     );
+     /**
+     * A Set of status that will be removed by the commande remove : "ACTION_REMOVE_DELETED"
+     */
     public static final Set<String> DELETED_REMOVE_STATUS= Set.of(
         STATUS_DELETED,
         STATUS_SEND,
@@ -145,15 +159,15 @@ public class CONSTANT {
     public static final String MODE_ADD = "add";
     public static final String MODE_REMOVE = "remove";
     public static final String MODE_TRANSFERT = "transfert";
+    
+    
      // =================  FILES  ================  //
     // ===============================================  //
     public static final String FILE_SAVE = "currentList.ser";
     
-    
-    
-    
     // =====================  POUR LES TABLES =============  //
     // ====================================================  //
+    // describing for each table which column will be exhibited, editable and class linked to column
     
     // --------------- table de scan
     public static final String[] TAB_COL_SCAN =  new String[] {
@@ -215,9 +229,11 @@ public class CONSTANT {
         "quantity"
     );
      // --------------- table de SEND - error part
+    // same as send part
     
      // =====================  POUR L'EXPORT =============  //
     // ====================================================  //
+    // list of column to be exported
     public static final String[] EXPORT_COL =  new String[] {
         "Barcode", "EAN","batch","Expiry Date","Name", 
         "location", "transfert location", "IPN",

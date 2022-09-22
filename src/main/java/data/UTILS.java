@@ -22,12 +22,22 @@ import static view.element.LinkPartDialog.NULL_ITEM;
  */
 public class UTILS {
     
+    /**
+     * Check if a string is null or rempty
+     * @param str
+     * @return true if null or empty or blank
+     */
     public static boolean isNullOrEmpty(String str){
         return (str == null || str.isEmpty() || str.isBlank());
     }
     
     // pour l'affichage du status des SI
-    
+    /**
+     * Create an HTML String representing the StocItem instance
+     * used in send diablog box.
+     * @param si
+     * @return 
+     */
     public static String getSIInfo(StockItem si){
         String str ="";
         // le code barre
@@ -64,11 +74,22 @@ public class UTILS {
         return str;
     }
     // ================================ pour les barcode
+    /**
+     * cleaning of a string from space, line breaker,...
+     * used for barcode cleaning
+     */
     private static final Pattern CLEAN_BC_PATTERN=Pattern.compile("[\s \r\n]*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
     public static String cleanBC(String bc){
         return CLEAN_BC_PATTERN.matcher(bc).replaceAll("");
     }
     // ================================= POUR LES DATES
+    /**
+     * Format a LocalDate to format
+     * used to fit to inventree date format
+     * @param ld
+     * @param format
+     * @return 
+     */
     public static String formatDate(LocalDate ld, String format){
         if(ld == null)
             return null;
@@ -77,6 +98,12 @@ public class UTILS {
     }
     
     // test sur des éléments typ textfield
+    /**
+     * run a test on a textfield to test wehter it's empty.
+     * and apply border based on test
+     * @param tf
+     * @return 
+     */
     public static boolean checkTextField(JTextField tf){
         if(tf.getText().isEmpty() || tf.getText().isBlank()){
             setCheckBorder(tf, false);
@@ -87,7 +114,12 @@ public class UTILS {
             return true;
         }
     }
-    
+        /**
+     * run a test on a combobox to test if there is a selected item (instance of InventreeItem)
+     * and apply border based on test
+     * @param tf
+     * @return 
+     */
     public static boolean checkComboBox(JComboBox cb){
         InventreeItem iv = (InventreeItem) cb.getSelectedItem();
         if(iv == null || iv.getId() == 0 || (iv.getName() == null ? NULL_ITEM == null : iv.getName().equals(NULL_ITEM))){
@@ -98,7 +130,12 @@ public class UTILS {
             return true;
         }
     }
-    
+    /**
+     * To apply a border on a component if a test is true or false, used by check upper method 
+     * @param cmp
+     * @param isOk
+     * @return 
+     */
     public static Boolean setCheckBorder(JComponent cmp, Boolean isOk){
         if(isOk){
             cmp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
@@ -124,7 +161,10 @@ public class UTILS {
         return Math.max(minV, Math.min(value, maxV));
     }
     // ================================= GESTION DE FICHIER
-        
+    /**
+     * Method to remove a file from a file path string
+     * @param filepath 
+     */
     public static void removeFile(String filepath){
         File file = new File(filepath);
  

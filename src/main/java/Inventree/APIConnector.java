@@ -98,6 +98,10 @@ public class APIConnector implements ListenerI{
         password = "";
     }
     // Connection
+    /**Launc connection and get the token from iv server
+     * 
+     * @return 
+     */
     public Boolean connect(){
         //System.out.println(this+" CONNECT  \n ---------> pass :"+password);
         if(invURL == null | userName == null | password == null){
@@ -121,6 +125,10 @@ public class APIConnector implements ListenerI{
     // =================================== MISE 0 JOUR DES LISTE PARAM ===================== //
     // ===================================================================================== //
     
+    /**
+     * Launch update of items list from ivl server
+     * - stock locations, manufacturers, suppliers, templated part, category
+     */
     public void updateParams(){
          updateStockLocation();
          updateManufacturer();
@@ -295,6 +303,9 @@ public class APIConnector implements ListenerI{
     }
     
     // initialisation à partir de l'ini
+    /**
+     * Initialisation from data stored in the ini file.
+     */
     public void initData(){
         
         this.updateURL(model.getIniValue(CONSTANT.SERVEUR_PARAM_HEAD, CONSTANT.SERVEUR_PARAM_URL));
@@ -323,7 +334,7 @@ public class APIConnector implements ListenerI{
     // =========================================================================================== //
     
     /** Retrieve information in Serveur for stocitem
-     * it qill search for EAN/barcode in Supplier SKU and then manufaturer MPN
+     * it qill search for EAN/barcode via barcode API in server, if not foudn it will look into Supplier SKU and then manufaturer MPN
      * If not found return unknown part
      * else will find Part Information
      * 
@@ -337,19 +348,10 @@ public class APIConnector implements ListenerI{
             
         // reinitialise les datat du SI
         si.setAsNewItem();
-        
-        //System.out.println(" #######################################################################  updateStockItemData on :"+si.EAN + " / status : "+si.getStatus());
-        //
         JSONArray jso;
         JSONObject obj;
         PartItem pi = new PartItem();
         si.partitem = pi;
-        // test si on retrouve EAN chez un manufacturer
-         
-        
-        //m.put("IPN", si.EAN);
-        
-        
          try {
              // test sur API barcode
              obj = InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
@@ -407,6 +409,13 @@ public class APIConnector implements ListenerI{
             model.updateStockItem(si);
         } 
     }
+    /**perform search in MPN and SKU for EAN
+     * 
+     * @param si : the stockitem
+     * @return
+     * @throws AuthenticationException
+     * @throws IOException 
+     */
     private JSONArray testBarcodeOnInternal(StockItem si) throws AuthenticationException, IOException{
         JSONArray jso;
         HashMap m = new HashMap();
@@ -421,7 +430,12 @@ public class APIConnector implements ListenerI{
            }
         return jso;       
     }
-    
+    /**
+     * If Part is found corresponding to the barcode, try to update some data from Inventree server
+     * 
+     * @param si
+     * @param forceStockLoc 
+     */
     public void updatePartItemData(StockItem si,String forceStockLoc){
         if(si.partitem.getId() == 0){
             si.setStatus(CONSTANT.STATUS_NEW_ITEM);
@@ -457,7 +471,12 @@ public class APIConnector implements ListenerI{
         } 
         
     }
-    
+    /**
+     * If part is found try to find stock information
+     * compar batch number, location and expiricy date
+     * @param si : the stock item searched 
+     * @param forceStockLoc params to force distant location instead of current scan parameter location
+     */
     public void updateStockInfo(StockItem si,String forceStockLoc){
         //System.out.println(this.getClass()+" updateStockInfo ");
         JSONArray jso;
@@ -523,6 +542,10 @@ public class APIConnector implements ListenerI{
            model.updateStockItem(si); 
     }
     
+    /**
+     * Retrieve location information if stock is found
+     * @param si : instance of StockItem 
+     */
     protected void updateLocationData(StockItem si){
         if(si.stocklocation.getId()==0)
             return;
@@ -555,8 +578,11 @@ public class APIConnector implements ListenerI{
     
     // ========================= ENVOI stockItem  VERS SERVEUR  ============================ //
     // =========================================================================================== //
+    /**
+     * Method to start the send process of a stockItem
+     * @param si 
+     */
     public void sendStockItem(StockItem si){
-        System.out.println("Inventree.APIConnector.sendStockItem() SI :"+si);
         if(si==null){
             model.stopSending();
             return;
@@ -566,16 +592,12 @@ public class APIConnector implements ListenerI{
         // check si part trouvé mais pas d'item dans le stock
         if(si.partitem != null && si.getId() == 0) {// si il y a une part mais pas d'id
             status = status && sendAddStockItem(si);
-            
         }
-        
-        
         // si item trouvé dans un stock => à mettre à jour
         if( si.getId() != 0){
             status = status && sendUpdateStock(si);
         }
-            
-        
+        // check send status
         if(status){
             si.setStatus(CONSTANT.STATUS_SEND);
         }else{
@@ -584,7 +606,11 @@ public class APIConnector implements ListenerI{
         
         model.itemSended(si);
     }
-    
+    /**
+     * Add a distant StockItem from a StockItem instance
+     * @param si
+     * @return 
+     */
     private boolean sendAddStockItem(StockItem si){
         JSONObject jso = createAddItemJSON(si);
         
@@ -601,7 +627,11 @@ public class APIConnector implements ListenerI{
             return false;
         }
     }
-    
+    /**
+     * Update a distant StockItem from a StockItem instance
+     * @param si
+     * @return 
+     */
     private boolean sendUpdateStock(StockItem si){
        HashMap m = new HashMap();
         m.put(si.getId(), si.quantity);
@@ -638,6 +668,8 @@ public class APIConnector implements ListenerI{
      * 
      * @param si ths stock item to link with
      * @param jso the JSON of part description
+     * @param assignToPart : if barcode should be assigned to the part
+     * @param assigToSupplier : if barcode should be assigned to the Supplier item
      */
     public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplier){
         JSONObject newPart = null;
@@ -691,7 +723,13 @@ public class APIConnector implements ListenerI{
          
          model.partCreated(si);
     }
-    
+     /**
+      * Link the barcode to an existing item
+     * @param si ths stock item to link with
+     * @param jso the JSON of part description
+     * @param assignToPart : if barcode should be assigned to the part
+     * @param assigToSupplier : if barcode should be assigned to the Supplier item
+     */
     public void linkPart(StockItem si, JSONArray jsa, Boolean assignToPart, Boolean assigToSupplier){
         boolean status = true;
         JSONObject suppPart=null;
@@ -753,6 +791,11 @@ public class APIConnector implements ListenerI{
             
     }
     // ===================== UTILITAIRE ==============//
+    /**
+     * Create a json object used to described the StockItem to be added
+     * @param si
+     * @return 
+     */
     public JSONObject createAddItemJSON(StockItem si){
         
         JSONObject jso = new JSONObject();
@@ -768,6 +811,11 @@ public class APIConnector implements ListenerI{
         return jso;
     }
     
+    /**
+     * create the json for transfert api
+     * @param si
+     * @return 
+     */
     public JSONObject createTransfertItemJSON(StockItem si){
         
         JSONObject jso = new JSONObject();
@@ -783,6 +831,7 @@ public class APIConnector implements ListenerI{
         
         return jso;
     }
+    
     /** clearURL : to remove protocole and leading /
      * to force https protocole
      * 

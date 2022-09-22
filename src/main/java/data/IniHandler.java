@@ -5,16 +5,15 @@
 package data;
 
 /**
- *
+ * Class in cahrge of handl ini file.
  * @author legen
  */
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
-import org.ini4j.*;
-
 import java.util.HashMap;
 import model.Model;
+import org.ini4j.*;
 import org.ini4j.Profile.Section;
         
 public class IniHandler {
@@ -61,12 +60,25 @@ public class IniHandler {
         }
         return iSt;  
     }
+    /**
+     * get a value from ini file 
+     * @param sectionName : the name of a section (String)
+     * @param keyName the parameter that are looked for
+     * @return String
+     */
     public String getValue(String sectionName, String keyName){
         Ini.Section section = iniObj.get(sectionName);
         if(section == null)
             return null;
         return section.get(keyName);
     }
+    /**
+     * get a value from ini file, with default value if not found
+     * @param sectionName
+     * @param keyName
+     * @param defaultValue
+     * @return 
+     */
     public String getValue(String sectionName, String keyName, String defaultValue){
         Ini.Section section = iniObj.get(sectionName);
         if(section == null)
@@ -74,6 +86,14 @@ public class IniHandler {
         
         return section.get(keyName,defaultValue);
     }
+    /**
+     * get a value from ini file, with default value if not found, and Base 64 decoded
+     * @param sectionName
+     * @param keyName
+     * @param defaultValue
+     * @param encodeB64
+     * @return 
+     */
     public String getValue(String sectionName, String keyName, String defaultValue, boolean encodeB64){
         String val = this.getValue(sectionName, keyName);
         if(val == null)
@@ -83,6 +103,14 @@ public class IniHandler {
             val = new String(Base64.getDecoder().decode(val));
         return val;
     }
+        /**
+     * get a value from ini file, and Base 64 decoded
+     * @param sectionName
+     * @param keyName
+     * @param defaultValue
+     * @param encodeB64
+     * @return 
+     */
     public String getValue(String sectionName, String keyName, boolean encodeB64){
         String val = this.getValue(sectionName, keyName);
         if(val == null)
@@ -92,7 +120,13 @@ public class IniHandler {
         return val;
     }
     
-    
+    /**
+     * Set a value in the ini fiel 
+     * @param sectionName
+     * @param keyName
+     * @param value
+     * @return 
+     */
     public Boolean setValue(String sectionName, String keyName, String value){
         Ini.Section section = iniObj.get(sectionName);
         if(section == null){
@@ -102,14 +136,27 @@ public class IniHandler {
         section.put(keyName, value);
         return save();
     }
-    public void setValue(String sectionName, String keyName, String value, boolean encodeB64) {
+        /**
+     * Set a value in the ini file
+     * @param sectionName
+     * @param keyName
+     * @param value 
+     * @param encodeB64 
+     * @return  
+     */
+    public Boolean setValue(String sectionName, String keyName, String value, boolean encodeB64) {
         String val = value;
         if(encodeB64){
             val = Base64.getEncoder().encodeToString(val.getBytes());
         }
-        this.setValue(sectionName, keyName, val);
+        return this.setValue(sectionName, keyName, val);
     }
-    
+    /**
+     * remove a key in sectionName in ini file
+     * @param sectionName
+     * @param keyName
+     * @return 
+     */
     public Boolean removeKey(String sectionName, String keyName){
          Ini.Section section = iniObj.get(sectionName);
          if(section == null)
@@ -117,13 +164,18 @@ public class IniHandler {
          section.remove(keyName);
          return save();
     }
+    /**
+     * remove a section in the ini file
+     * @param sectionName
+     * @return 
+     */
     public Boolean removeSection(String sectionName){
         iniObj.remove(sectionName);
         return save();
     }
     
     /** Process d'un Objet IniStruct
-     * 
+     * Create/update the ini file structure
      * @param iniS
      * @return true/false if all are stored or if there is a niusse
      */
@@ -179,6 +231,10 @@ public class IniHandler {
         }
         return iniFile;
     }
+    /**
+     * get the folder path to save in ifile
+     * @return 
+     */
     public String getIniFolder(){
         String currDir = System.getProperty("user.dir");
         currDir = currDir.concat(System.getProperty("file.separator")).concat(iniFolder);

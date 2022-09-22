@@ -5,9 +5,7 @@ package Inventree.item;
 
 import barcode.barcode;
 import data.CONSTANT;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  *
@@ -73,6 +71,13 @@ public class StockItem extends InventreeItem {
     }
     // getter pour gestion des colonnes des table
     //"Barcode", "EAN","Name", "location", "quantity in stock"  , "quantity", "action", "status"
+    /**
+     * Method to get values shown in tables from class elements.
+     * @param <T>
+     * @param objName
+     * @param type
+     * @return 
+     */
     public <T> T get(String objName, Class<T> type){
         //System.out.println(this.getClass()+ "   ======  require GET \n    -  onbjName :"+objName+"\n    - Class :"+type);
         switch(objName.toUpperCase()){
@@ -131,7 +136,11 @@ public class StockItem extends InventreeItem {
         }
         return null;
     }
-    
+    /**
+     * method to set values of class element from table editing
+     * @param objName
+     * @param value 
+     */
      public void set(String objName, Object value){
         //System.out.println(this.getClass()+ "   ======  require SET \n    -  onbjName :"+objName+"\n    - Class :"+value);
         switch(objName.toUpperCase()){

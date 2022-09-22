@@ -344,15 +344,20 @@ public class ScanView extends JPanel
     @Override
     public void processBarcode(BarcodeEvent e) {
         layerUI.startBlink(btnPan.getBackground());
-        StockItem si = e.stockitem;
-        si.stocklocation =(StockLocation) stockList.getSelectedItem();
-        //si.quantity = 1;
-        si.action = group.getSelection().getActionCommand();
-        if(si.action.equals(CONSTANT.MODE_TRANSFERT))
-            si.transfertLocation = (StockLocation) trsfStockList.getSelectedItem();
-        //System.out.println(this+" in loc : "+si.stocklocation);
-        controller.addStockItem(e.stockitem);
-        //System.out.println(this+ " Barcode Event : \n"+e);
+        switch(e.type){
+            case BarcodeEvent.BCB_COMMAND:
+                controller.manageCommand(((BarcodeEvent) e).command);
+                break;
+            case BarcodeEvent.BCB_STATUS_UPDATE, BarcodeEvent.NEW_BARCODE, BarcodeEvent.UNKOWN_BARCODE:
+                StockItem si = e.stockitem;
+                si.stocklocation =(StockLocation) stockList.getSelectedItem();
+                si.action = group.getSelection().getActionCommand();
+                if(si.action.equals(CONSTANT.MODE_TRANSFERT))
+                    si.transfertLocation = (StockLocation) trsfStockList.getSelectedItem();
+                controller.addStockItem(e.stockitem);
+                break;
+        }
+        
         
     }
 

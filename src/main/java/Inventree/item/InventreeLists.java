@@ -7,8 +7,8 @@ import barcode.StockList;
 import data.CONSTANT;
 import java.util.ArrayList;
 
-/**Class to reference Parameters from Serveur (eg stock location, category, ...)
- *
+/**Singleton Class to reference Parameters from Serveur (eg stock location, category, ...)
+ * and stock items list scanned
  * @author blegendre
  */
 public class InventreeLists {

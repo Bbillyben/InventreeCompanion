@@ -3,7 +3,6 @@
  */
 package Inventree.item;
 
-import java.io.Serializable;
 import org.apache.maven.shared.utils.StringUtils;
 
 /**

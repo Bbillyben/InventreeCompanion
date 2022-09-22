@@ -5,7 +5,8 @@
 package data;
 
 /**
- *
+ * Class creating a strucutre similar to ini file
+ * will be used to send parameters to IniHandler.
  * @author blegendre
  */
 import java.util.Base64;

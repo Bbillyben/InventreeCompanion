@@ -23,7 +23,7 @@ public class EAN128Decoder extends BarcodeDecoder {
     private final char defaultBreak = '#';
     private static final String startCode = "]C1";
     
-    protected String type = "EAN128";
+    protected static String type = "EAN128";
     
     private static final Map<String, AII> aiinfo = Maps.newHashMap();
     public List<String> unknownAI;
