@@ -118,6 +118,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
            ev.type=BarcodeEvent.BCB_COMMAND;
            ev.command = decoder.getCommand();
         }else{
+            ev.type = BarcodeEvent.NEW_BARCODE;
             StockItem si = new StockItem();
             decoder.processStockItem(si);
             // clean current barcode 
