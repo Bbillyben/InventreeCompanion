@@ -12,7 +12,8 @@ import data.CONSTANT;
  */
 public class ItemCheck {
     
-    /**Check validity of StockItem action vs server info before send
+    /**Check validity of StockItem action vs server info before sending
+     * and update status in consequence
      * 
      * @param si the stock item to check
      */
@@ -22,9 +23,9 @@ public class ItemCheck {
         if(CONSTANT.MODE_ADD.equals(si.action) )
             return;
         
-        // Si Action remove 
+        // Si Action remove or transfert
         // check if Item is recognize => id >0
-        if(si.getId() == 0){
+        if(si.getId() == 0){// if no id => no Stock Item found
             si.setStatus(CONSTANT.STATUS_ERR_NO_ITEM_REMOVE);
             return;
         }

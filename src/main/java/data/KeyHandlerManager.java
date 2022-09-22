@@ -8,6 +8,7 @@ import Inventree.item.StockItem;
 import barcodeDecoder.BarcodeDecoder;
 import barcodeDecoder.BasicBarcode;
 import barcodeDecoder.EAN128Decoder;
+import barcodeDecoder.InternalBarcodeDecoder;
 import events.BarcodeEvent;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -21,7 +22,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JTextField;
 import listeners.keyBarcodeListener;
-/**
+
+/**Class dedicated to handle keyboard event from textfield or other Component 
+ * to lanch barcode decodiong regarding a list of barcodedecoder
  *
  * @author blegendre
  */
@@ -36,7 +39,12 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     private List<keyBarcodeListener> bcListener;
     
     private boolean useQuantity=false;
+    /**
+     * list of barcodedecoder ''plugin'' to be challenged against raw barcode
+     * to be updated with the list of barcode decoder extending BarcodeDecoder
+     */
     private static BarcodeDecoder[] DECODERS=new BarcodeDecoder[]{
+        new InternalBarcodeDecoder(),
         new EAN128Decoder(), 
         new BasicBarcode()
     };
@@ -104,16 +112,19 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
             return;
             //throw new Exception("Unknown barcode type : "+barcodeStr);
         }
-        
-        //System.out.println(" barcode : " + barcode);
-        BarcodeEvent ev = new BarcodeEvent(this);        
+        BarcodeEvent ev = new BarcodeEvent(this);
         decoder.decodeBarcode(barcodes, useQuantity);
-        StockItem si = new StockItem();
-        decoder.processStockItem(si);
-        // clean current barcode 
+        if(decoder.isCommand()){// if recognize as a command barcode
+           ev.type=BarcodeEvent.BCB_COMMAND;
+           ev.command = decoder.getCommand();
+        }else{
+            StockItem si = new StockItem();
+            decoder.processStockItem(si);
+            // clean current barcode 
+            ev.stockitem = si;
+            ev.barcode = si.barcode;
+        }
         barcodes.clear();
-        ev.stockitem = si;
-        ev.barcode = si.barcode;
         this.dispatchEvent(ev);
         
         //barcode = "";

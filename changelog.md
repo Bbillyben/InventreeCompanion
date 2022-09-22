@@ -1,3 +1,11 @@
+# 22-09-2022 / Beta v.0.6.2 :
+  * Add scan of internal Inventree Barcode as Command : 
+      -  set stocklocation (eg scan barcode type : {'stocklocation':1} )
+
+# 20-09-2022 / Beta v.0.6.1 :
+  * Fix log out do not clean password if saved in ini file
+  * add Javadoc
+
 # 16-09-2022 / Beta v.0.6 :
   * Fit with barcode api refactoring from Inventree 
       * add barcode link to part, Supplier part

@@ -6,6 +6,7 @@ package events;
 
 import Inventree.item.StockItem;
 import barcode.barcode;
+import org.json.JSONObject;
 
 /**
  *
@@ -17,6 +18,7 @@ public class BarcodeEvent extends iEvent {
     public static final String EAN_128="ean_128";
     public static final String UNKOWN_BARCODE = "unknown_barcode";
     public static final String BCB_STATUS_UPDATE = "bcb_status_update";
+     public static final String BCB_COMMAND = "bcb_command";
     /**
      * the value of the barcode for the event to bring with
      */
@@ -24,6 +26,7 @@ public class BarcodeEvent extends iEvent {
     public StockItem stockitem;
     public String eventValue;
     public String[][] tableDesc;
+    public JSONObject command;
     
     public BarcodeEvent(Object source) {
          super(source);

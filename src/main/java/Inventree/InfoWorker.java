@@ -11,6 +11,8 @@ import model.Model;
 /**
  *
  * @author legen
+ * 
+ * This is the worker in charge of launching the update information of a given StockItem
  */
 public class InfoWorker extends Thread {
     private final Model model;

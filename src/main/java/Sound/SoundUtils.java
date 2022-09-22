@@ -5,7 +5,7 @@ package Sound;
 
 /**
  *
- * @author blegendre
+ * @author someone : https://www.rgagnon.com/javadetails/java-0499.html
  */
 import javax.sound.sampled.*;
 

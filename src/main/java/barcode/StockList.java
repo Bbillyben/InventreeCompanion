@@ -53,6 +53,11 @@ public class StockList implements Serializable{
         }
         return re;
     }
+    /**
+     * Get a list of StockItem corresponding to a given status
+     * @param statusSet : the status searched
+     * @return 
+     */
     public ArrayList<StockItem> getListOf(String statusSet){
         ArrayList<StockItem> re = new ArrayList<>();
         for(StockItem si : bList){
@@ -63,11 +68,17 @@ public class StockList implements Serializable{
         return re;
     }
     
-    /// Fonction pour l'envoi
-    /// fonction ajout suppression
+    /**
+     * Add a stock item to the list     * 
+     * @param si 
+     */
     public void add(StockItem si){
         bList.add(si);
     }
+    /**
+     * remove a stockitem from the list
+     * @param si 
+     */
     public void remove(StockItem si){
         bList.remove(si);
     }
@@ -87,6 +98,10 @@ public class StockList implements Serializable{
     // -------------------------------- Creation d'un item pour l'export -------------------- //
     // -------------------------------------------------------------------------------------- //
     
+    /**
+     * Generate a Bi dimensional array of the list to be exported
+     * @return 
+     */
     public ArrayList<String[]> getExportData(){
         ArrayList<String[]> expD = new ArrayList<>();
         

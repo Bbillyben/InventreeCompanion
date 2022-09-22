@@ -12,6 +12,7 @@ import listeners.ListenerI;
 import listeners.NavigationListener;
 import listeners.ParamListener;
 import model.Model;
+import org.json.JSONObject;
 import view.iView;
 
 /**
@@ -25,6 +26,9 @@ public class ScanController extends iController implements NavigationListener {
         md.addEventListener(this, NavigationListener.class);
     }
     
+    public void manageCommand(JSONObject cmd){
+        model.manageCommand(cmd);
+    }
     public void addStockItem(StockItem si){
         model.addStockItem(si, true);
     }

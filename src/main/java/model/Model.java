@@ -136,7 +136,8 @@ public class Model {
         
         switch (page) {// pour les action du menu
             case CONSTANT.ACTION_LOGOUT:
-                apiConn.logout();
+                apiConn.logout();//clean information in API Connector
+                iniH.removeKey(CONSTANT.USER_PARAM_HEAD, CONSTANT.USER_PARAM_PASS);// remove the password key in ini file
                 break;
             case CONSTANT.ACTION_UPDATE_PARAM:
                 apiConn.updateParams();
@@ -169,6 +170,12 @@ public class Model {
 
         NavEvent e = new NavEvent(this, NavEvent.NAVIGATE, page);
         this.dispatchEvent(NavigationListener.class, e);
+    }
+    /* ---------- gestion des commandes par barcode ----------------- */
+    public void manageCommand(JSONObject cmd){
+        if(cmd.has("stocklocation")){
+            changeLocationSelection(String.valueOf(cmd.get("stocklocation")));
+        }
     }
     /* --------------------- Gestion des interaction API ------------ */
     public void changeStatus(String newStatus){
