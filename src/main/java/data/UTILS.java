@@ -39,6 +39,8 @@ public class UTILS {
      * @return 
      */
     public static String getSIInfo(StockItem si){
+        if(si == null)
+            return null;
         String str ="";
         // le code barre
         str = "barcode :"+si.EAN;

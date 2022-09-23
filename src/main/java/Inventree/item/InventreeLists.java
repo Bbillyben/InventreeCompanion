@@ -5,6 +5,7 @@ package Inventree.item;
 
 import barcode.StockList;
 import data.CONSTANT;
+import data.UTILS;
 import java.util.ArrayList;
 
 /**Singleton Class to reference Parameters from Serveur (eg stock location, category, ...)
@@ -62,17 +63,10 @@ public class InventreeLists {
     public StockItem addStockItem(StockItem si, String forceStockLocation){
         boolean isSame;
         for(StockItem tsi : stockList.getList()){
-            /*System.out.println(this.getClass()+" Compare "
-            +"\n   - EAN :"+si.EAN+" / "+tsi.EAN+" : "+(si.EAN == null ? tsi.EAN == null : si.EAN.equals(tsi.EAN))
-            +"\n   - batch :"+si.batch+" / "+tsi.batch+" : "+(si.batch == null ? tsi.batch == null : si.batch.equals(tsi.batch))
-            +"\n   - date :"+si.expiry_date+" / "+tsi.expiry_date+" : "+(si.expiry_date == null ? tsi.expiry_date == null : si.expiry_date.equals(tsi.expiry_date))
-            +"\n   - stocklocation :"+si.stocklocation.getName()+" / "+tsi.stocklocation.getName()+" : "+(si.stocklocation.getId() == tsi.stocklocation.getId())
-            
-            );*/
             if(! CONSTANT.MODIFIABLE_STATUS.contains(tsi.status))
                 continue;
             isSame = true;
-            isSame = isSame && (si.EAN == null ? tsi.EAN == null : si.EAN.equals(tsi.EAN));
+            isSame = isSame && (si.EAN == null ? tsi.EAN == null : UTILS.cleanBC(si.EAN).equals(UTILS.cleanBC(tsi.EAN)));
             isSame = isSame && (si.batch == null ? tsi.batch == null : si.batch.equals(tsi.batch));
             isSame = isSame && (si.expiry_date == null ? tsi.expiry_date == null : si.expiry_date.equals(tsi.expiry_date));
             //if(forceStockLocation == CONSTANT.SCAN_FORCE_LOC_LOCAL)

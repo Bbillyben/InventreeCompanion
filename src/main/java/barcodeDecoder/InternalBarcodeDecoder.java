@@ -6,6 +6,7 @@ package barcodeDecoder;
 import Inventree.item.StockItem;
 import barcode.barcode;
 import java.util.ArrayList;
+import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +18,9 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     protected static String type="InternalInventreeCommand";
     protected JSONObject cmd;
     
+    protected Set<String> availableCmd = Set.of(
+            "stocklocation"
+    );
     
     @Override
     public boolean isCommand(){
@@ -24,14 +28,18 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     }
     
     @Override
-    public  boolean isSupported(ArrayList<String> bc){       
+    public  boolean isSupported(ArrayList<String> bc){ 
         String bcStr = bc.get(0);
         try {
-            new JSONObject(bcStr);
+            JSONObject jso =  new JSONObject(bcStr);
+            boolean isAvailable = false;
+            for(String key : jso.keySet()){
+                isAvailable = isAvailable || availableCmd.contains(key);
+            }
+            return isAvailable;
         } catch (JSONException ex) {
             return false;
         }
-        return true;
     }
     
 
