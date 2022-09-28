@@ -129,6 +129,11 @@ public class Model {
         return global_status;
     }
     
+    public void setError(String errorMsg){
+        InfoEvent e = new InfoEvent(this, InfoEvent.GENERIC_DISPLAY_ERROR, errorMsg);
+        this.dispatchEvent(InfoListener.class, e);
+    }
+    
     
     /* --------------------- Gestion de la Navigation --------------- */
     public void navigate(String page){

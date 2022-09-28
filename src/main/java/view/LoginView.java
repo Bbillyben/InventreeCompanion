@@ -19,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -140,6 +141,7 @@ public class LoginView extends JPanel implements iView, ConnectionListener, Acti
         //System.out.println("loginView event :"+e);
         switch(e.type){
             case ConnectionEvent.CONNECTION_ERROR:
+                JOptionPane.showMessageDialog(this, "Connection Error : \n    - "+ ((ConnectionEvent) e).reason );
                 break;
             case ConnectionEvent.CONNECTION_SUCCESS:
                 break;

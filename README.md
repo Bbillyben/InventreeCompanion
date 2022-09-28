@@ -20,8 +20,15 @@ A basic decoder (without any transformation) is implemented.
         
   - The decoder is parametered to use "#" char as separator instead of the non printable caracter, and the FNC1 as "]C1"
 
+#### Inventree Internal Barcode :
+it will be identified if the barcode encode for a json object.
 
-#### Basic decoder :
+  - Inventree Internal barcode is decoded : 
+        - if it's a stocklocation BC (eg `{"stocklocation":id}`) it will set the current location.
+        - if it's a part, stockitem or a supplier part, it will identify the related part
+        [TO DO : better handling for that part (eg get full server info)]
+
+### Basic decoder :
   - It will set the entire alphanumeric code as identifyer.
 
 

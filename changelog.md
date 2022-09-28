@@ -1,3 +1,6 @@
+# 28-09-2022 / Beta v.0.6.3 :
+  * API error response handling : now the message of the error is showed up.
+
 # 22-09-2022 / Beta v.0.6.2 :
   * Add scan of internal Inventree Barcode as Command : 
       -  set stocklocation (eg scan barcode type : {'stocklocation':1} )

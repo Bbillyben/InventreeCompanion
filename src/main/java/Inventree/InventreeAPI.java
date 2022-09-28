@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 import javax.naming.AuthenticationException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /** Class dedicated to API request to Inventree Server
@@ -38,15 +37,13 @@ public class InventreeAPI {
      * @throws javax.naming.AuthenticationException 
      * @throws java.io.IOException 
      */
-    public static String requestToken(String invUrl, String username, String password) throws AuthenticationException, IOException{
-        System.out.println("URL : "+invUrl+ " / user : "+ username + " / pass : "+password);
+    public static ApiResponse requestToken(String invUrl, String username, String password) throws AuthenticationException, IOException{
         String userAuth = username+":"+password;
         String headerAuth = "Basic " + Base64.getEncoder().encodeToString(userAuth.getBytes());
         Request re = buildQuery(invUrl, "/api/user/token/", METHOD_GET,  headerAuth, null, null);
         Response response = re.fetch();
-        return check(response.status()) ? new JSONObject(response.body()).getString("token") :  null;  
-            
-          
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONObject(response.body()).getString("token") :  null;  
     }
     
     /* =================================================================== */
@@ -66,10 +63,11 @@ public class InventreeAPI {
      * @throws AuthenticationException 
      * @throws java.io.IOException 
      */
-    public static JSONArray requestStockInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+    public static ApiResponse requestStockInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl, "/api/stock/", METHOD_GET,  "Token "+token, searchItem, null);  
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;  
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;  
         
     }
     /**Get the information of a specific stock item
@@ -86,10 +84,11 @@ public class InventreeAPI {
      * @throws AuthenticationException 
      * @throws java.io.IOException 
      */
-     public static JSONObject requestStockItemInfo(String invUrl, String token, int partNumber) throws AuthenticationException, IOException{
+     public static ApiResponse requestStockItemInfo(String invUrl, String token, int partNumber) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl, "/api/stock/"+String.valueOf(partNumber)+"/", METHOD_GET,  "Token "+token, null, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONObject(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONObject(response.body()) :  null;
         
     }
      
@@ -103,11 +102,12 @@ public class InventreeAPI {
       * @throws AuthenticationException 
      * @throws java.io.IOException 
       */
-     public static int addToStockItem(String invUrl, String token, Map<Integer, Integer> quantityMap) throws AuthenticationException, IOException{
+     public static ApiResponse addToStockItem(String invUrl, String token, Map<Integer, Integer> quantityMap) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl, "/api/stock/add/", METHOD_POST,  "Token "+token, null, quantityMap);             
         Response response =re.fetch();
         int status =response.status();
-        return check(status) ? status :  null;
+        return new ApiResponse(response);
+        //eturn check(status) ? status :  null;
     }
      /**Remove  a quantity to a specific StockItem
       * 
@@ -120,11 +120,12 @@ public class InventreeAPI {
       * @throws AuthenticationException 
      * @throws java.io.IOException 
       */
-     public static int removeToStockItem(String invUrl, String token, Map<Integer, Integer> quantityMap) throws AuthenticationException, IOException{
+     public static ApiResponse removeToStockItem(String invUrl, String token, Map<Integer, Integer> quantityMap) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl, "/api/stock/remove/", METHOD_POST,  "Token "+token, null, quantityMap);             
         Response response =re.fetch();
         int status = response.status();
-        return check(status) ? status :  null;
+        return new ApiResponse(response);
+        //return check(status) ? status :  null;
     }
      /** Add  an item to stock from part description (not update
       * 
@@ -135,12 +136,13 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static int addItemToStock(String invUrl, String token, JSONObject data) throws AuthenticationException, IOException{
+     public static ApiResponse addItemToStock(String invUrl, String token, JSONObject data) throws AuthenticationException, IOException{
         //System.out.println("Inventree.InventreeAPI.addItemToStock() data :\n"+data);
         Request re = buildQuery(invUrl, "/api/stock/", METHOD_POST,  "Token "+token, data);             
         Response response =re.fetch();
         int status = response.status();
-        return check(status) ? status :  null;
+        return new ApiResponse(response);
+        //return check(status) ? status :  null;
          
      }
      
@@ -153,11 +155,12 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static int transfertItemToStock(String invUrl, String token, JSONObject data) throws AuthenticationException, IOException{
+     public static ApiResponse transfertItemToStock(String invUrl, String token, JSONObject data) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl, "/api/stock/transfer/", METHOD_POST,  "Token "+token, data);             
         Response response =re.fetch();
         int status = response.status();
-        return check(status) ? status :  null;
+        return new ApiResponse(response);
+        //return check(status) ? status :  null;
      }
     
     /* =================================================================== */
@@ -178,10 +181,11 @@ public class InventreeAPI {
      * @throws AuthenticationException 
      * @throws java.io.IOException 
      */
-    public static JSONArray requestPartInfo(String invUrl, String token, int partNumber) throws AuthenticationException, IOException{
+    public static ApiResponse requestPartInfo(String invUrl, String token, int partNumber) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/part/"+String.valueOf(partNumber)+"/", METHOD_GET,  "Token "+token, null, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray("["+response.body()+"]"):  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray("["+response.body()+"]"):  null;
     }
      /**Get part Information from search
      * 
@@ -197,10 +201,11 @@ public class InventreeAPI {
      * @throws AuthenticationException 
      * @throws java.io.IOException 
      */
-     public static JSONArray requestPartInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+     public static ApiResponse requestPartInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/part/", METHOD_GET,  "Token "+token, searchItem, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
     /**Add a new PART to the serveur
@@ -212,10 +217,11 @@ public class InventreeAPI {
      * @throws AuthenticationException
      * @throws IOException 
      */
-    public static JSONObject addPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
+    public static ApiResponse addPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/part/", METHOD_POST,  "Token "+token, jso);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONObject(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONObject(response.body()) :  null;
     }
      
      
@@ -224,10 +230,11 @@ public class InventreeAPI {
     /* =================================================================== */
     /* -------------------------   FOR Category ------------------------- */
     /* =================================================================== */
-    public static JSONArray requestCategoryInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+    public static ApiResponse requestCategoryInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/part/category/", METHOD_GET,  "Token "+token, searchItem, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
     /* =================================================================== */
@@ -245,10 +252,11 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */ 
-     public static JSONArray requestManufacturerInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+     public static ApiResponse requestManufacturerInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/company/part/manufacturer/", METHOD_GET,  "Token "+token, searchItem, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
     /**Get the full list of Supplier info
@@ -262,11 +270,12 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */ 
-     public static JSONArray requestSupplierInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+     public static ApiResponse requestSupplierInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/company/part/supplier/", METHOD_GET,  "Token "+token, searchItem, null);  
         //System.out.println("-------------------------------------- > "+re.uri());
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
      /**retrieve information from Company
@@ -280,11 +289,12 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static JSONArray requestCompanyInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
+     public static ApiResponse requestCompanyInfo(String invUrl, String token, Map<String, String> searchItem ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/company/", METHOD_GET,  "Token "+token, searchItem, null);  
         //System.out.println("-------------------------------------- > "+re.uri());
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
      
      /**retrieve a specific part information from Company
@@ -296,10 +306,11 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static JSONObject requestPartCompanyInfo(String invUrl, String token, Integer pk ) throws AuthenticationException, IOException{
+     public static ApiResponse requestPartCompanyInfo(String invUrl, String token, Integer pk ) throws AuthenticationException, IOException{
         Request re = buildQuery(invUrl,"/api/company/part/"+String.valueOf(pk)+"/", METHOD_GET,  "Token "+token, null, null);  
         Response response =re.fetch();
-        return check(response.status()) ? new JSONObject(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONObject(response.body()) :  null;
     }
      /**Add a part to a supplier
       * 
@@ -310,12 +321,13 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static JSONObject addSupplierPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
+     public static ApiResponse addSupplierPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
          
          Request re = buildQuery(invUrl,"/api/company/part/", METHOD_POST,  "Token "+token, jso);  
          Response response =re.fetch();
          int status = response.status();
-         return check(status) ? new JSONObject(response.body()) :  null;
+         return new ApiResponse(response);
+        //return check(status) ? new JSONObject(response.body()) :  null;
      }
      
      /**Add a part to a manufacturer
@@ -327,11 +339,12 @@ public class InventreeAPI {
       * @throws AuthenticationException
       * @throws IOException 
       */
-     public static int addManufacturerPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
+     public static ApiResponse addManufacturerPart(String invUrl, String token, JSONObject jso) throws AuthenticationException, IOException{
          Request re = buildQuery(invUrl,"/api/company/part/manufacturer/", METHOD_POST,  "Token "+token, jso);  
          Response response =re.fetch();
          int status = response.status();
-         return check(status) ? status :  0;
+         return new ApiResponse(response);
+        //return check(status) ? status :  0;
      }
      
      
@@ -349,10 +362,11 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */ 
-    public static JSONArray getStockLocation(String invUrl, String token) throws IOException, AuthenticationException{
+    public static ApiResponse getStockLocation(String invUrl, String token) throws IOException, AuthenticationException{
         Request re = buildQuery(invUrl,"/api/stock/location/", METHOD_GET,  "Token "+token, null, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray(response.body()) :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray(response.body()) :  null;
     }
     /**Get information of a specific stock location
      * 
@@ -363,10 +377,11 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */ 
-    public static JSONArray getStockLocation(String invUrl, String token, int locationId) throws IOException, AuthenticationException{
+    public static ApiResponse getStockLocation(String invUrl, String token, int locationId) throws IOException, AuthenticationException{
         Request re = buildQuery(invUrl,"/api/stock/location/"+String.valueOf(locationId)+"/", METHOD_GET,  "Token "+token, null, null);             
         Response response =re.fetch();
-        return check(response.status()) ? new JSONArray("[" + response.body()+"]") :  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONArray("[" + response.body()+"]") :  null;
     }
     
     /* =================================================================== */
@@ -381,13 +396,14 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */
-    public static JSONObject getBarcodeInfo(String invUrl, String token, String barcode) throws IOException, AuthenticationException{
+    public static ApiResponse getBarcodeInfo(String invUrl, String token, String barcode) throws IOException, AuthenticationException{
         JSONObject bcData = new JSONObject();
         bcData.put("barcode", barcode);
         Request re = buildQuery(invUrl,"/api/barcode/", METHOD_POST,  "Token "+token, bcData);             
         Response response =re.fetch();
         //System.out.println("Inventree.InventreeAPI.getBarcodeInfo()  \n   -- response "+response);
-        return check(response.status()) ? new JSONObject(response.body()):  null;
+        return new ApiResponse(response);
+        //return check(response.status()) ? new JSONObject(response.body()):  null;
     }
     /**Assign a barcode to : 
      * 'part', 'stockitem', 'stocklocation', 'supplierpart'
@@ -399,31 +415,12 @@ public class InventreeAPI {
      * @throws IOException
      * @throws AuthenticationException 
      */
-    public static int assignBarcode(String invUrl, String token, JSONObject bcAssJSO) throws IOException, AuthenticationException{
+    public static ApiResponse assignBarcode(String invUrl, String token, JSONObject bcAssJSO) throws IOException, AuthenticationException{
         Request re = buildQuery(invUrl,"/api/barcode/link/", METHOD_POST,  "Token "+token, bcAssJSO);             
         Response response =re.fetch();
         int status = response.status();
-        return check(status) ? status :  0;
-    }
-        
-    /* =================================================================== */
-    // ------------------ gestion des status des réponses ----------------- //
-    /* =================================================================== */
-    
-    public static boolean check(int status) throws AuthenticationException{
-         switch (status) {
-                case 400:
-                    return false;
-                case 401: // authentication error
-                    throw new AuthenticationException("Invalid Credential") ;
-                case 404: // not found
-                    return false;
-                case 200: // connection ok
-                case 201: // action ok
-                    return true;
-                default: // other status not yet handled
-                    throw new AuthenticationException("Un Handled error ( status :"+status + ")") ;
-            }
+        return new ApiResponse(response);
+        //return check(status) ? status :  0;
     }
     
     /* =================================================================== */
