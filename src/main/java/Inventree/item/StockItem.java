@@ -111,6 +111,8 @@ public class StockItem extends InventreeItem {
                 }*/
                 return type.cast(action);
             case "STATUS":
+                if(statusDesc != null)
+                    return type.cast(status + ": "+statusDesc);
                 return type.cast(status);
             case "BATCH":
                 return type.cast(batch);

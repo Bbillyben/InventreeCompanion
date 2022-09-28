@@ -69,10 +69,10 @@ public class UTILS {
         }else{
              str+= "color:orange'>";
         }
-        str+=si.getStatus()+"</font>";
-        
-        
-        
+        str+=si.getStatus();
+        str+="</font>";
+         if(si.statusDesc != null )
+              str+= " <font style='font-size:smaller'> ("+si.statusDesc+") </font>";
         return str;
     }
     // ================================ pour les barcode
