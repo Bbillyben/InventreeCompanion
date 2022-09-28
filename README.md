@@ -26,7 +26,6 @@ it will be identified if the barcode encode for a json object.
   - Inventree Internal barcode is decoded : 
         - if it's a stocklocation BC (eg `{"stocklocation":id}`) it will set the current location.
         - if it's a part, stockitem or a supplier part, it will identify the related part
-        [TO DO : better handling for that part (eg get full server info)]
 
 ### Basic decoder :
   - It will set the entire alphanumeric code as identifyer.
