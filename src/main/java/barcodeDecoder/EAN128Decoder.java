@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  * @author legen
  */
 public class EAN128Decoder extends BarcodeDecoder {
-    private final char defaultBreak = '#';
-    private static final String startCode = "]C1";
+    private final char defaultBreak = '#';// the default printed caracter break returned by the handscanner (=> to be parametered in the hand scanner)
+    private static final String startCode = "]C1";// the printed ~F1 caracter that start the sequence => maybe handscanner dependant
     
     protected static String type = "EAN128";
     
