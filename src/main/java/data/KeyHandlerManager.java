@@ -44,9 +44,9 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
      * to be updated with the list of barcode decoder extending BarcodeDecoder
      */
     private static BarcodeDecoder[] DECODERS=new BarcodeDecoder[]{
-        new InternalBarcodeDecoder(),
-        new EAN128Decoder(), 
-        new BasicBarcode()
+        new InternalBarcodeDecoder(),// for inventree internal barcode handling
+        new EAN128Decoder(), // for EAN128/GS1-128 barcode
+        new BasicBarcode() //DON'T REMOVE, it will set the alphanumeric code scanned as a the whole identifier, without extra processing
     };
     
     public KeyHandlerManager(){

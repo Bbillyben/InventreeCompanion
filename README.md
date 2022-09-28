@@ -18,7 +18,7 @@ A basic decoder (without any transformation) is implemented.
         - Charge_Number or ProductModel as Batch number
         - AmountInParts as number of part : there is a parameter to let you choose to use it or not.
         
-  - The decoder is parametered to use "#" char as separator instead of the non printable caracter, and the FNC1 as "]C1"
+  - the start code of the barcode (~FNC1) has to be printed with "]C1", and the break caracter (non printable) should be parametered to print "#" caracter in your handscanner.
 
 #### Inventree Internal Barcode :
 it will be identified if the barcode encode for a json object.
@@ -27,7 +27,7 @@ it will be identified if the barcode encode for a json object.
         - if it's a stocklocation BC (eg `{"stocklocation":id}`) it will set the current location.
         - if it's a part, stockitem or a supplier part, it will identify the related part
 
-### Basic decoder :
+#### Basic decoder :
   - It will set the entire alphanumeric code as identifyer.
 
 
