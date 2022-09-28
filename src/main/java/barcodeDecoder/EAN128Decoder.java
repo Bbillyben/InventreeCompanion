@@ -211,7 +211,7 @@ public class EAN128Decoder extends BarcodeDecoder {
        barcode bc = new barcode();
        bc.EAN = getFristAI(equivSearch.get("EAN"));
        bc.code = getBarcodeString();
-       bc.type = this.type;
+       bc.type = EAN128Decoder.type;
        
        return bc;
     }

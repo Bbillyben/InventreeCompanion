@@ -66,8 +66,8 @@ public class StockItem extends InventreeItem {
         id = 0;
         quantityInStock = 0;
         partitem = null;
-        
-                
+        statusDesc=null;
+             
     }
     // getter pour gestion des colonnes des table
     //"Barcode", "EAN","Name", "location", "quantity in stock"  , "quantity", "action", "status"

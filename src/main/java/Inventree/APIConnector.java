@@ -15,6 +15,7 @@ import data.UTILS;
 import events.IniEvent;
 import events.iEvent;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -380,7 +381,42 @@ public class APIConnector implements ListenerI{
             si.setStatus(CONSTANT.STATUS_ERROR_EAN, "No EAN defined");
             return;
         }
-            
+        if( CONSTANT.INTERNAL.equals(si.EAN)){
+            updateInternalStockItem(si, forceStockLoc);
+        }else{
+            updateExternalStockItem(si, forceStockLoc);
+        }
+    }
+    public void updateInternalStockItem(StockItem si, String forceStockLoc){
+        JSONArray jso;
+        ApiResponse ar;
+        JSONObject obj = null;
+        si.quantityInStock = 0;
+        si.statusDesc = null;
+        switch(UTILS.getInternalTypeBarcode(si.barcode.code)){
+            case CONSTANT.INTERNAL_PART:
+                si.setId(0);
+                updatePartItemData(si, forceStockLoc);
+                if(si.partitem.getId()!=0){
+                    updateStockInfo(si, forceStockLoc);
+                }else{
+                    si.setStatus(CONSTANT.STATUS_ERROR_EAN);
+                    si.statusDesc = " id part does not exist";
+                }
+                break;
+            case CONSTANT.INTERNAL_STOCKITEM:
+                updateFromStockItemData(si, forceStockLoc);
+                break;
+            case CONSTANT.INTERNAL_SUPPLIERPART:
+                updateExternalStockItem(si, forceStockLoc);
+               break;
+            default:
+                si.setStatus(CONSTANT.STATUS_ERROR);
+                si.statusDesc = " Internal barcode type not found";
+        }
+        model.updateStockItem(si);
+    }
+    public void updateExternalStockItem(StockItem si, String forceStockLoc){
         // reinitialise les datat du SI
         si.setAsNewItem();
         JSONArray jso;
@@ -388,9 +424,13 @@ public class APIConnector implements ListenerI{
         JSONObject obj = null;
         PartItem pi = new PartItem();
         si.partitem = pi;
+        String bcStr = si.EAN;
+        if(CONSTANT.INTERNAL.equals(si.EAN))
+                bcStr = si.barcode.code;
+        
          try {
              // test sur API barcode
-             ar =  InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
+             ar =  InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, bcStr);
              if(ar.check()){
                 obj = ar.getJson();
             }
@@ -401,14 +441,15 @@ public class APIConnector implements ListenerI{
                     obj = jso.getJSONObject(0);
                     pi.setId(obj.getInt("part"));
                     updatePartItemData(si, forceStockLoc);
-                    return;
+                    //return;
                  }
              }else{
+                 System.out.println("json :"+obj);
                  // get type of element with barcode : 
                  if(obj.has("part")){// si c'est une part
                      pi.setId(obj.getJSONObject("part").getInt("pk"));
                      updatePartItemData(si, forceStockLoc);
-                     return;
+                     //return;
                  }else if(obj.has("supplierpart")){// si c'est un fournisseur
                      Integer pk = obj.getJSONObject("supplierpart").getInt("pk");
                      ar =InventreeAPI.requestPartCompanyInfo(cleanURL(invURL), apiKey,pk);
@@ -418,7 +459,7 @@ public class APIConnector implements ListenerI{
                     if (obj != null ){
                         pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
                         updatePartItemData(si, forceStockLoc);
-                        return;
+                        //return;
                      }
                      
                  }else if(obj.has("stockitem")){// si c'est un stockitem
@@ -437,10 +478,13 @@ public class APIConnector implements ListenerI{
                      if (obj != null ){
                         pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
                         updatePartItemData(si, forceStockLoc);
-                        return;
+                        
+                        //return;
                      }
                  }
              }
+             if(si.partitem != null && si.partitem.getId() != 0)
+                            updateStockInfo(si, forceStockLoc);
                
         } catch (AuthenticationException ex) {
             si.setStatus(CONSTANT.STATUS_NEW_ITEM);
@@ -520,11 +564,69 @@ public class APIConnector implements ListenerI{
             if(obj.get("IPN")!=JSONObject.NULL)
                 pi.IPN = obj.getString("IPN");
             pi.setName(obj.getString("name"));
-            updateStockInfo(si, forceStockLoc);
+            //updateStockInfo(si, forceStockLoc);
         }else{
+            si.partitem.setId(0);
             si.setStatus(CONSTANT.STATUS_NEW_ITEM);
             model.updateStockItem(si);
         } 
+        
+    }
+    /**From internal code bar, set a part id => retrieve the information from that
+     * 
+     * @param si
+     * @param forceStockLoc 
+     */
+    public void updateFromStockItemData(StockItem si,String forceStockLoc){
+        JSONObject jso=null;
+        JSONObject part = null;
+        PartItem pi = new PartItem();
+        si.partitem = pi;
+        try {
+           // find item part from its id previously foundZ
+           ApiResponse ar = InventreeAPI.requestStockItemInfo(cleanURL(invURL), apiKey,si.getId());
+            if(ar.check()){
+                jso = ar.getJson();
+            }else{
+                si.setStatus(CONSTANT.STATUS_ERROR_EAN);
+                si.statusDesc = " Stockitem id not found";
+                return;
+            }
+           //System.out.println(this.getClass()+" jso length "+jso.length());
+        } catch (AuthenticationException ex) {
+            model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+            return;
+        } catch (IOException ex) {
+            model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
+            return;
+        }
+        if(jso!=null){
+            // for part
+            part = jso.getJSONObject("part_detail");
+            pi.setId(part.getInt("pk"));
+            pi.setName(part.getString("name"));
+            if(part.get("IPN")!=JSONObject.NULL)
+                pi.IPN = part.getString("IPN");
+            
+            // pour le stock item
+            si.quantityInStock = jso.getInt("quantity");
+            if(jso.get("expiry_date")!= JSONObject.NULL)
+                si.expiry_date = LocalDate.parse(jso.getString("expiry_date"));//jso.get("expiry_date")
+            if(jso.get("batch") != JSONObject.NULL )
+                si.batch= jso.getString("batch");
+            
+            // test du lieu si différents de celui référencé
+            if(si.stocklocation.getId() != jso.getInt("location")){
+                si.setStatus(CONSTANT.STATUS_ERR_LOC);
+                si.statusDesc = " StockItem referenced in "+jso.getJSONObject("location_detail").getString("name");
+            }else{
+               si.setStatus(CONSTANT.STATUS_ITEM_FOUND); 
+            }
+            
+        }else{
+            si.setStatus(CONSTANT.STATUS_ERROR);
+            si.statusDesc = " update stock item error not defined";
+        }
         
     }
     /**
@@ -574,7 +676,7 @@ public class APIConnector implements ListenerI{
            comp = true;
            obj = jso.getJSONObject(i);
            String batch = obj.getString("batch");
-         
+           System.out.println("Inventree.APIConnector.updateStockInfo() ---------- ");
            int locId = (obj.get("location") == JSONObject.NULL ? 0 : obj.getInt("location") );
            String expDate = String.valueOf(obj.get("expiry_date"));
            // the comparaison operators
@@ -583,8 +685,7 @@ public class APIConnector implements ListenerI{
                comp = comp && (si.stocklocation.getId() == locId);
            if(si.expiry_date != null){
                comp = comp && UTILS.formatDate(si.expiry_date, "yyyy-LL-dd").equals(expDate);
-           }
-            
+           }                    
            if(comp){
                si.setId(obj.getInt("pk"));
                si.quantityInStock = obj.getInt("quantity");

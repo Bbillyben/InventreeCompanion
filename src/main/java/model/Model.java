@@ -143,6 +143,7 @@ public class Model {
             case CONSTANT.ACTION_LOGOUT:
                 apiConn.logout();//clean information in API Connector
                 iniH.removeKey(CONSTANT.USER_PARAM_HEAD, CONSTANT.USER_PARAM_PASS);// remove the password key in ini file
+                //ivl.stockList.clear();
                 break;
             case CONSTANT.ACTION_UPDATE_PARAM:
                 apiConn.updateParams();

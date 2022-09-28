@@ -9,11 +9,14 @@ import java.awt.Color;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import org.json.JSONException;
+import org.json.JSONObject;
 import static view.element.LinkPartDialog.NULL_ITEM;
 
 /**
@@ -83,6 +86,30 @@ public class UTILS {
     private static final Pattern CLEAN_BC_PATTERN=Pattern.compile("[\s \r\n]*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
     public static String cleanBC(String bc){
         return CLEAN_BC_PATTERN.matcher(bc).replaceAll("");
+    }
+    
+    /**Get the type of the internal barcode 
+     * eg : part, stockitem, supplierpart
+     * 
+     * @param bcStr : the barcode string to be processed as JSON
+     * @return 
+     */
+    public static String getInternalTypeBarcode(String bcStr){
+         try {
+            JSONObject jso =  new JSONObject(bcStr);
+            Set keys = jso.keySet();            
+            if(keys.contains(CONSTANT.INTERNAL_PART)){
+                return CONSTANT.INTERNAL_PART;
+            }else if(keys.contains(CONSTANT.INTERNAL_STOCKITEM)){
+                return CONSTANT.INTERNAL_STOCKITEM;
+            }else if(keys.contains(CONSTANT.INTERNAL_SUPPLIERPART)){
+                return CONSTANT.INTERNAL_SUPPLIERPART;
+            }else{
+                return null;
+            }
+        } catch (JSONException ex) {
+            return null;
+        }        
     }
     // ================================= POUR LES DATES
     /**

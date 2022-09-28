@@ -4,6 +4,7 @@
 package view.element;
 
 import Inventree.item.InventreeLists;
+import Inventree.item.StockItem;
 import Inventree.item.StockLocation;
 import data.CONSTANT;
 import events.PopUpActionEvent;
@@ -54,7 +55,8 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
     private EventListenerList listeners;
     
     JPopupMenu jpm;
-    
+    private String tmpval;// force storing value to be copyed by popup menu action
+    private StockItem tmpSI;// force storing StocItelm to be update by popup menu action
     
     public ScanTable(){ //ArrayList<StockItem> siList){
         super();
@@ -64,11 +66,15 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
         jpm = new JPopupMenu();
         JMenuItem copy = new JMenuItem("Copy");
         copy.setActionCommand(CONSTANT.ACTION_COPY_VALUE);
+        JMenuItem forceupdate = new JMenuItem("Force Update");
+        forceupdate.setActionCommand(CONSTANT.ACTION_FORCE_UPDATE_SINGLE);
         
         jpm.add(copy);
+        jpm.add(forceupdate);
+        
         this.setComponentPopupMenu(jpm);
         copy.addActionListener(this);
-        
+        forceupdate.addActionListener(this);
         
         jpm.addPopupMenuListener(this);
     }
@@ -169,11 +175,12 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
    @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component comp = super.prepareRenderer(renderer, row, column);
-        //System.out.println("ScanTable.prepareRenderer()"+row+"-"+column+"/  > "+renderer);
-        int modelRow = convertRowIndexToModel(row);
-        String second = (String) this.getModel().getValueAt(row,((StockItemModel) this.getModel()).findColumn("status")); 
+        StockItem si = (StockItem) this.getModel().getValueAt(row,-1); 
+        String second = si.getStatus(); 
         if(second != null && !CONSTANT.MODIFIABLE_STATUS.contains(second)){
             comp.setBackground(Color.GRAY);
+        }else if(second != null &&CONSTANT.ERROR_SEND_STATUS.contains(second) ){
+            comp.setBackground(new Color(255, 235, 149));
         }else if(second != null &&CONSTANT.ERROR_STATUS.contains(second) ){
             comp.setBackground(Color.ORANGE);
         }else{
@@ -208,26 +215,33 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(tmpval!=null){
+        if(tmpval!=null && CONSTANT.ACTION_COPY_VALUE.equals(e.getActionCommand())){
             PopUpActionEvent ev =new PopUpActionEvent(this, PopUpActionEvent.ACTION_COPY, tmpval);
-            
+            this.dispatchEvent(PopUpActionListener.class, ev);
+        }else if(tmpSI!=null && CONSTANT.ACTION_FORCE_UPDATE_SINGLE.equals(e.getActionCommand()) ){
+            PopUpActionEvent ev =new PopUpActionEvent(this, PopUpActionEvent.ACTION_UPDATE_ONE);
+            ev.si = tmpSI;
             this.dispatchEvent(PopUpActionListener.class, ev);
         }
         
     }
-    private String tmpval;
 
-
+    /**Catch popup menu before being invisible and storing values for actions in popup menu item
+     * 
+     * @param e 
+     */
     @Override
     public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
         Point p =SwingUtilities.convertPoint(jpm, new Point(0,0), this);
         int rowAtPoint = this.rowAtPoint(p);
         int colAtPoint = this.columnAtPoint(p);
-        System.out.println("row :"+rowAtPoint+ " / col :"+colAtPoint+"    ( point :"+p+")");
+        //System.out.println("row :"+rowAtPoint+ " / col :"+colAtPoint+"    ( point :"+p+")");
         if (rowAtPoint > -1 && colAtPoint > -1) {
             tmpval=String.valueOf(this.getValueAt(rowAtPoint, colAtPoint));
+            tmpSI=(StockItem) this.getValueAt(rowAtPoint, -1);
         }else{
             tmpval=null;
+            tmpSI = null;
         }
     }
     

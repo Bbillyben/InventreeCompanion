@@ -3,8 +3,10 @@
  */
 package barcodeDecoder;
 
+import Inventree.item.PartItem;
 import Inventree.item.StockItem;
 import barcode.barcode;
+import data.CONSTANT;
 import java.util.ArrayList;
 import java.util.Set;
 import org.json.JSONException;
@@ -21,10 +23,19 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     protected Set<String> availableCmd = Set.of(
             "stocklocation"
     );
+    protected Set<String> availableItem = Set.of(
+            "part",
+            "stockitem",
+            "supplierpart"
+    );
     
     @Override
     public boolean isCommand(){
-        return true;
+        for(String key : cmd.keySet()){
+            if(availableCmd.contains(key))
+                return true;
+        }
+        return false;
     }
     
     @Override
@@ -35,6 +46,9 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
             boolean isAvailable = false;
             for(String key : jso.keySet()){
                 isAvailable = isAvailable || availableCmd.contains(key);
+            }
+            for(String key : jso.keySet()){
+                isAvailable = isAvailable || availableItem.contains(key);
             }
             return isAvailable;
         } catch (JSONException ex) {
@@ -59,7 +73,11 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
 
     @Override
     public barcode getBarcode() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        barcode bc = new barcode();
+        bc.code=cmd.toString();
+        bc.type = InternalBarcodeDecoder.type;
+        bc.EAN = CONSTANT.INTERNAL;
+        return bc;
     }
 
     @Override
@@ -69,7 +87,20 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
 
     @Override
     public void processStockItem(StockItem si) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        si.barcode = this.getBarcode();
+        if(cmd.has("part")){
+            if(si.partitem == null)
+                si.partitem = new PartItem();
+            si.partitem.setId(cmd.getInt("part"));
+        }
+        if(cmd.has("stockitem")){
+            si.setId(cmd.getInt("stockitem"));
+        }
+        /*if(cmd.has("supplierpart")){
+            
+        }*/
+        si.quantity = 1;
+        si.EAN = CONSTANT.INTERNAL;
     }
     
 }
