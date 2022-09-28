@@ -8,3 +8,4 @@ target/*
 ext_file/
 *.ser
 *.ini
+/nbproject/
