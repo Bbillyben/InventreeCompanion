@@ -112,6 +112,8 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
             return;
             //throw new Exception("Unknown barcode type : "+barcodeStr);
         }
+        
+         System.out.println("KeyHandlerManager / decoder : "+decoder);
         BarcodeEvent ev = new BarcodeEvent(this);
         decoder.decodeBarcode(barcodes, useQuantity);
         if(decoder.isCommand()){// if recognize as a command barcode

@@ -66,7 +66,12 @@ public class InventreeLists {
             if(! CONSTANT.MODIFIABLE_STATUS.contains(tsi.status))
                 continue;
             isSame = true;
-            isSame = isSame && (si.EAN == null ? tsi.EAN == null : UTILS.cleanBC(si.EAN).equals(UTILS.cleanBC(tsi.EAN)));
+            if(CONSTANT.INTERNAL.equals(si.EAN)){
+                isSame = isSame && UTILS.cleanBC(si.barcode.code).equals(UTILS.cleanBC(tsi.barcode.code));
+            
+            }else{
+                isSame = isSame && (si.EAN == null ? tsi.EAN == null : UTILS.cleanBC(si.EAN).equals(UTILS.cleanBC(tsi.EAN)));
+            }
             isSame = isSame && (si.batch == null ? tsi.batch == null : si.batch.equals(tsi.batch));
             isSame = isSame && (si.expiry_date == null ? tsi.expiry_date == null : si.expiry_date.equals(tsi.expiry_date));
             //if(forceStockLocation == CONSTANT.SCAN_FORCE_LOC_LOCAL)

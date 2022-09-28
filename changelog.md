@@ -1,5 +1,7 @@
-# 28-09-2022 / Beta v.0.6.3 :
+# 28-09-2022 / Beta v.0.6.3/4 :
   * API error response handling : now the message of the error is showed up.
+  * Internal Barcode processing amelioration
+  * add right clic to force update on single stockitem in list
 
 # 22-09-2022 / Beta v.0.6.2 :
   * Add scan of internal Inventree Barcode as Command : 

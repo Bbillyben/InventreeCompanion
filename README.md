@@ -153,6 +153,13 @@ Error status :
         - Export to CSV : to export current list to csv format (coma separated)
         - Export to Excel : to export to Excel Format (xlsx)
 
+#### Popup Menu in Tables :
+
+Right clic on table will sho popup menu.
+
+Actions : 
+    - Copy : to copy the current cell value in the clipboard
+    - Force Update : to force update on a single Stockitem
 
 
 use Library : 

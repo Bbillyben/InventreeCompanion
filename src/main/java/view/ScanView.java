@@ -319,6 +319,9 @@ public class ScanView extends JPanel
             case PopUpActionEvent.ACTION_COPY:
                 controller.copyValue(((PopUpActionEvent) e).value);
                 break;
+            case PopUpActionEvent.ACTION_UPDATE_ONE:
+                controller.updateStockItem(((PopUpActionEvent) e).si);
+                break;
         }
     }
 

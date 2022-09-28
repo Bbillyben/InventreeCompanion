@@ -4,13 +4,17 @@
  */
 package events;
 
+import Inventree.item.StockItem;
+
 /**
  *
  * @author legen
  */
 public class PopUpActionEvent extends iEvent {
    public static final String ACTION_COPY = "action_copy";
+   public static final String ACTION_UPDATE_ONE = "action_update_one";
    public String value;
+   public StockItem si;
     
     public PopUpActionEvent(Object source) {
          super(source);

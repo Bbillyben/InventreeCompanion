@@ -3,8 +3,6 @@
  */
 package Inventree.item;
 
-import java.io.Serializable;
-
 /**
  *
  * @author blegendre
@@ -27,5 +25,16 @@ public class PartItem extends InventreeItem {
         this.id = idS;
     }
     
+    public String toString(){
+        String str = "[Inventree.item.PartItem]"
+                +"\n  - id :"+this.id
+                +"\n  - name :"+this.name
+                +"\n  - IPN :"+this.IPN
+                +"\n  - EAN :"+this.EAN
+                +"\n  - partTemplate :"+this.partTemplate
+                +"\n  - isTemplate :"+this.isTemplate
+                ;
+        return str;
+    }
     
 }

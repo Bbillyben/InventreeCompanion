@@ -65,7 +65,8 @@ public class CONSTANT {
     public static final String ACTION_SEND_PART = "send_part";
     public static final String ACTION_SEND_ALL = "send_all";
 
-    public static final String ACTION_COPY_VALUE = "copy_value";
+    public static final String ACTION_COPY_VALUE = "copy_value";// popup menu JTable => copy cell
+    public static final String ACTION_FORCE_UPDATE_SINGLE = "force_update_single";
     
     public static final String ACTION_EXPORT_CSV = "export_CSV";
     public static final String ACTION_EXPORT_EXCEL = "export_Excel";
@@ -96,6 +97,14 @@ public class CONSTANT {
     
     public static final String SENDABLE = "sendable_item"; // utilisé pour tout les items qui sont envoyable au server, a utiliser avec le Set SENDABLE_STATUS
     
+    
+    // for internal barcode
+    public static final String INTERNAL = "internal"; 
+    
+    public static final String INTERNAL_PART = "part";
+    public static final String INTERNAL_STOCKITEM = "stockitem";
+    public static final String INTERNAL_SUPPLIERPART = "supplierpart";
+    
     /**
      * A Set of status that can be edit in table
      */
@@ -108,7 +117,9 @@ public class CONSTANT {
         STATUS_ERR_NO_ITEM_REMOVE,
         STATUS_ERR_QUANTITY,
         STATUS_ERR_SAME_LOC,
-        STATUS_ERR_LOC
+        STATUS_ERR_LOC,
+        STATUS_ERROR_EAN,
+        STATUS_SEND_ERROR
     );
      /**
      * A Set of status that can be send to distant server
@@ -117,16 +128,20 @@ public class CONSTANT {
         STATUS_ITEM_FOUND,
         STATUS_NEW_ITEM
     );
+    public static final Set<String> ERROR_SEND_STATUS= Set.of(
+       STATUS_SEND_ERROR
+    );
+    
      /**
      * A Set of status representing errors, and being colorized in table
      */
     public static final Set<String> ERROR_STATUS= Set.of(
         STATUS_ERROR_EAN,
-        STATUS_SEND_ERROR,
         STATUS_ERR_NO_ITEM_REMOVE,
         STATUS_ERR_QUANTITY,
         STATUS_ERR_SAME_LOC,
-        STATUS_ERR_LOC
+        STATUS_ERR_LOC,
+        STATUS_SEND_ERROR
     );
      /**
      * A Set of status that will be removed by the commande remove : "ACTION_REMOVE_DELETED"

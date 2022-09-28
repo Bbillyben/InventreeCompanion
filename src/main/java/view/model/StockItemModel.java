@@ -94,10 +94,11 @@ public class StockItemModel extends AbstractTableModel implements TableModel  { 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex)
     {
-        if(columnIndex < 0 || columnIndex > columnNames.length)
+        if(columnIndex < -1 || columnIndex > columnNames.length)
             return null;
         StockItem row = siList.get(siList.size()-1 - rowIndex);
-        
+        if(columnIndex == -1)
+            return row;
         return row.get(columnNames[columnIndex], columnClass[columnIndex]);
     }
     @Override
