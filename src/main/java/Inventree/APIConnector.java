@@ -354,7 +354,7 @@ public class APIConnector implements ListenerI{
         si.partitem = pi;
          try {
              // test sur API barcode
-             obj = InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
+             obj = InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey,si.EAN);
              
              
              // If not found in barcode, we search in MPN and SKU
