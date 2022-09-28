@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import listeners.ConnectionListener;
 import listeners.InfoListener;
@@ -67,10 +68,13 @@ public class StatusView extends JPanel implements iView, ConnectionListener, Inf
                 break;
             case InfoEvent.GENERIC_ERROR:
                 statusTxt.setText("<html><font style='color:red'>"+((InfoEvent) e).info +"</font></html>");
+            case InfoEvent.GENERIC_DISPLAY_ERROR:
+                JOptionPane.showMessageDialog(this, "Error : \n    - "+ ((InfoEvent) e).info );
                 break;
             case InfoEvent.GENERIC_OK:
                 statusTxt.setText("<html><font style='color:green'>"+((InfoEvent) e).info +"</font></html>");
-                break;  
+                break; 
+            
         }
     }
     

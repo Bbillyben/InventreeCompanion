@@ -45,7 +45,7 @@ public class APIConnector implements ListenerI{
     
     private boolean forceHTTP=false;
     
-    private InventreeLists ivl;
+    private final InventreeLists ivl;
     
     
     
@@ -109,10 +109,15 @@ public class APIConnector implements ListenerI{
             return false;
         }
         try {
-           apiKey = InventreeAPI.requestToken(cleanURL(invURL), userName, password);
-           //System.out.println(apiKey);
-           model.setConnectionStatus(Boolean.TRUE, null);
-           return true;
+           ApiResponse ar = InventreeAPI.requestToken(cleanURL(invURL), userName, password);
+           if(ar.check()){
+               apiKey = ar.getJson().getString("token");
+               model.setConnectionStatus(Boolean.TRUE, null);
+               return true;
+           }else{
+               model.setConnectionStatus(Boolean.FALSE, ar.getError());
+           }
+           
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
         } catch (IOException ex) {
@@ -141,7 +146,13 @@ public class APIConnector implements ListenerI{
     private void updateCategory(){
         JSONArray jso;
         try {
-           jso = InventreeAPI.requestCategoryInfo(cleanURL(invURL), apiKey,null);
+           ApiResponse ar = InventreeAPI.requestCategoryInfo(cleanURL(invURL), apiKey,null);
+           if(ar.check()){
+               jso = ar.getArray();
+           }else{
+               model.setError("Category read error : "+ar.getError());
+               return;
+           }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -168,9 +179,15 @@ public class APIConnector implements ListenerI{
     private void updatePartTemplateSourceList(){
         //HashMap<String, String> m = new HashMap<>();
         //m.put("is_template", "true");
-        JSONArray jso;
+        JSONArray jso=null;
         try {
-           jso = InventreeAPI.requestPartInfo(cleanURL(invURL), apiKey,null);
+            ApiResponse ar = InventreeAPI.requestPartInfo(cleanURL(invURL), apiKey,null);
+            if(ar.check()){
+                jso = ar.getArray();
+            }else{
+                model.setError("Part read error : "+ar.getError());
+                return;
+            }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -200,7 +217,13 @@ public class APIConnector implements ListenerI{
     private void updateStockLocation(){
        JSONArray jso;
        try {
-           jso = InventreeAPI.getStockLocation(cleanURL(invURL), apiKey);
+           ApiResponse ar = InventreeAPI.getStockLocation(cleanURL(invURL), apiKey);
+           if(ar.check()){
+                jso = ar.getArray();
+            }else{
+                model.setError("Location read error : "+ar.getError());
+                return;
+           }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -239,7 +262,13 @@ public class APIConnector implements ListenerI{
         HashMap m = new HashMap();
         m.put("is_manufacturer", "true");
         try {
-           jso = InventreeAPI.requestCompanyInfo(cleanURL(invURL), apiKey,m);
+           ApiResponse ar = InventreeAPI.requestCompanyInfo(cleanURL(invURL), apiKey,m);
+           if(ar.check()){
+                jso = ar.getArray();
+            }else{
+               model.setError("Manufacturer read error : "+ar.getError());
+                return;
+           }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -276,7 +305,13 @@ public class APIConnector implements ListenerI{
         HashMap m = new HashMap();
         m.put("is_supplier", "true");
         try {
-           jso = InventreeAPI.requestCompanyInfo(cleanURL(invURL), apiKey,m);
+           ApiResponse ar = InventreeAPI.requestCompanyInfo(cleanURL(invURL), apiKey,m);
+           if(ar.check()){
+                jso = ar.getArray();
+            }else{
+                model.setError("Supplier read error : "+ar.getError());
+                return;
+           }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -349,14 +384,16 @@ public class APIConnector implements ListenerI{
         // reinitialise les datat du SI
         si.setAsNewItem();
         JSONArray jso;
-        JSONObject obj;
+        ApiResponse ar;
+        JSONObject obj = null;
         PartItem pi = new PartItem();
         si.partitem = pi;
          try {
              // test sur API barcode
-             obj = InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
-             
-             
+             ar =  InventreeAPI.getBarcodeInfo(cleanURL(invURL), apiKey, si.EAN);
+             if(ar.check()){
+                obj = ar.getJson();
+            }
              // If not found in barcode, we search in MPN and SKU
              if(obj == null || obj.has("error") ){
                  jso = testBarcodeOnInternal(si);
@@ -374,8 +411,10 @@ public class APIConnector implements ListenerI{
                      return;
                  }else if(obj.has("supplierpart")){// si c'est un fournisseur
                      Integer pk = obj.getJSONObject("supplierpart").getInt("pk");
-                     obj=InventreeAPI.requestPartCompanyInfo(cleanURL(invURL), apiKey,pk);
-                     System.out.println("Supplier info :"+obj);
+                     ar =InventreeAPI.requestPartCompanyInfo(cleanURL(invURL), apiKey,pk);
+                     if(ar.check()){
+                         obj = ar.getJson();
+                     }
                     if (obj != null ){
                         pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
                         updatePartItemData(si, forceStockLoc);
@@ -385,7 +424,16 @@ public class APIConnector implements ListenerI{
                  }else if(obj.has("stockitem")){// si c'est un stockitem
                      Integer pk = obj.getJSONObject("stockitem").getInt("pk");
                      
-                     obj=InventreeAPI.requestStockItemInfo(cleanURL(invURL), apiKey, pk);
+                     ar =InventreeAPI.requestStockItemInfo(cleanURL(invURL), apiKey, pk);
+                     if(ar.check()){
+                         obj = ar.getJson();
+                     }else{
+                         si.setStatus(CONSTANT.STATUS_ERROR);
+                         si.statusDesc = ar.getError();
+                         model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
+                        return;
+                     }
+                     
                      if (obj != null ){
                         pi.setId(obj.getJSONObject("part_detail").getInt("pk"));
                         updatePartItemData(si, forceStockLoc);
@@ -417,16 +465,21 @@ public class APIConnector implements ListenerI{
      * @throws IOException 
      */
     private JSONArray testBarcodeOnInternal(StockItem si) throws AuthenticationException, IOException{
-        JSONArray jso;
+        JSONArray jso=null;
         HashMap m = new HashMap();
         m.put("MPN", si.EAN);
-        jso = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
-        if(jso.length() == 0){
+         ApiResponse ar = InventreeAPI.requestManufacturerInfo(cleanURL(invURL), apiKey,m);
+           if(ar.check()){
+               jso = ar.getArray();
+           }
+        if(jso == null || jso.length() == 0){
                m.clear();
                // test Supplier
                 m.put("SKU", si.EAN);
-                jso = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
-              
+                ar = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey,m);
+                if(ar.check()){
+                    jso = ar.getArray();
+                }
            }
         return jso;       
     }
@@ -443,12 +496,15 @@ public class APIConnector implements ListenerI{
             return;
         }
         //System.out.println(this.getClass()+" updatePartItemData ");
-        JSONArray jso;
+        JSONArray jso=null;
         JSONObject obj;
         PartItem pi = si.partitem;
         try {
-           // find item part from its id previously found
-           jso = InventreeAPI.requestPartInfo(cleanURL(invURL), apiKey, pi.getId());
+           // find item part from its id previously foundZ
+           ApiResponse ar = InventreeAPI.requestPartInfo(cleanURL(invURL), apiKey,pi.getId());
+            if(ar.check()){
+                jso = ar.getArray();
+            }
            //System.out.println(this.getClass()+" jso length "+jso.length());
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
@@ -458,7 +514,7 @@ public class APIConnector implements ListenerI{
             return;
         }
         // si on a une touche
-        if (jso.length() >0 ){
+        if (jso != null && jso.length() >0 ){
             obj = jso.getJSONObject(0);
             pi.setId(obj.getInt("pk"));
             if(obj.get("IPN")!=JSONObject.NULL)
@@ -492,8 +548,13 @@ public class APIConnector implements ListenerI{
         }*/
          try {
            // test Supplier
-           jso = InventreeAPI.requestStockInfo(cleanURL(invURL), apiKey, m);
-          
+           ApiResponse ar = InventreeAPI.requestStockInfo(cleanURL(invURL), apiKey, m);
+           if(ar.check()){
+               jso = ar.getArray();
+           }else{
+               model.setError("Stock Info error : "+ar.getError());
+                return;
+           }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -550,11 +611,14 @@ public class APIConnector implements ListenerI{
         if(si.stocklocation.getId()==0)
             return;
         
-        JSONArray jso;
+        JSONArray jso = null;
         JSONObject obj;
+        ApiResponse ar = null;
         try {
-           jso = InventreeAPI.getStockLocation(cleanURL(invURL), apiKey, si.stocklocation.getId());
-          
+           ar = InventreeAPI.getStockLocation(cleanURL(invURL), apiKey, si.stocklocation.getId());
+           if(ar.check()){
+                jso = ar.getArray();
+            }
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             return;
@@ -562,8 +626,10 @@ public class APIConnector implements ListenerI{
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
             return;
         }
-         if (jso.length() == 0 ){// if no item correspond to the search params
+         if (jso == null || jso.length() == 0 ){// if no item correspond to the search params
              si.setStatus(CONSTANT.STATUS_SEND_ERROR);
+             if(ar!=null)
+                 si.statusDesc = ar.getError();
              model.updateStockItem(si);
              return;
          }
@@ -616,8 +682,11 @@ public class APIConnector implements ListenerI{
         
         int status;
          try {
-           status = InventreeAPI.addItemToStock(cleanURL(invURL), apiKey, jso);
-           return InventreeAPI.check(status);
+           ApiResponse ar = InventreeAPI.addItemToStock(cleanURL(invURL), apiKey, jso);
+            if(!ar.check()){
+               si.statusDesc = ar.getError();
+           }
+           return ar.check();
       
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
@@ -636,16 +705,17 @@ public class APIConnector implements ListenerI{
        HashMap m = new HashMap();
         m.put(si.getId(), si.quantity);
         int status = 0;
+        ApiResponse ar=null;
         try {
            switch(si.action){
                case CONSTANT.MODE_ADD:
-                   status = InventreeAPI.addToStockItem(cleanURL(invURL), apiKey, m);
+                   ar = InventreeAPI.addToStockItem(cleanURL(invURL), apiKey, m);
                    break;
                case CONSTANT.MODE_REMOVE:
-                   status = InventreeAPI.removeToStockItem(cleanURL(invURL), apiKey, m);
+                   ar = InventreeAPI.removeToStockItem(cleanURL(invURL), apiKey, m);
                    break;
                case CONSTANT.MODE_TRANSFERT:
-                   status = InventreeAPI.transfertItemToStock(cleanURL(invURL), apiKey, createTransfertItemJSON(si));
+                   ar = InventreeAPI.transfertItemToStock(cleanURL(invURL), apiKey, createTransfertItemJSON(si));
                    break;
            }
            /*if(CONSTANT.MODE_ADD.equals(si.action)){
@@ -653,7 +723,11 @@ public class APIConnector implements ListenerI{
            }else{
                status = InventreeAPI.removeToStockItem(cleanURL(invURL), apiKey, m);
            }*/
-           return InventreeAPI.check(status);
+           if(ar != null && !ar.check()){
+               si.statusDesc = ar.getError();
+           }
+
+           return (ar!=null?ar.check():false);
       
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
@@ -674,7 +748,14 @@ public class APIConnector implements ListenerI{
     public void createPart(StockItem si, JSONObject jso, Boolean assignToPart, Boolean assigToSupplier){
         JSONObject newPart = null;
          try {
-           newPart = InventreeAPI.addPart(cleanURL(invURL), apiKey, jso);
+             ApiResponse ar = InventreeAPI.addPart(cleanURL(invURL), apiKey, jso);
+             if(ar.check()){
+                 newPart = ar.getJson();
+             }else{
+                 model.setError("Part Creation Error : "+ar.getError());
+                 return;
+             }
+           
         } catch (AuthenticationException ex) {
             model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
         } catch (IOException ex) {
@@ -694,7 +775,10 @@ public class APIConnector implements ListenerI{
              assJSO.put("part", si.partitem.getId());
              assJSO.put("barcode", si.EAN);
             try {
-                Integer status = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                ApiResponse ar = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                if(!ar.check()){
+                    model.setError("Assign BC to Part Error : "+ar.getError());
+                }
             }catch (AuthenticationException ex) {
                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
@@ -706,12 +790,18 @@ public class APIConnector implements ListenerI{
              HashMap<String, String> search = new HashMap<>();
              search.put("part", String.valueOf(si.partitem.getId()));
             try {
-                JSONArray res = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey, search);
+                JSONArray res = null;
+                ApiResponse ar = InventreeAPI.requestSupplierInfo(cleanURL(invURL), apiKey, search);
+                if(ar.check()){
+                    res = ar.getArray();
+                }else{
+                    model.setError("Assign BC to supplier Error : "+ar.getError());
+                }
                 if(res != null){
                     assJSO = new JSONObject();
                     assJSO.put("supplierpart",  res.getJSONObject(0).getInt("pk"));
                     assJSO.put("barcode", si.EAN);
-                    Integer status = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                    ar  = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
                 }
             }catch (AuthenticationException ex) {
                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
@@ -726,7 +816,7 @@ public class APIConnector implements ListenerI{
      /**
       * Link the barcode to an existing item
      * @param si ths stock item to link with
-     * @param jso the JSON of part description
+     * @param jsa JSONArrau containing JSON of part supplier and manufacturer 
      * @param assignToPart : if barcode should be assigned to the part
      * @param assigToSupplier : if barcode should be assigned to the Supplier item
      */
@@ -736,7 +826,13 @@ public class APIConnector implements ListenerI{
         JSONObject assJSO;
         if(!jsa.isNull(0)){
             try {
-                suppPart = InventreeAPI.addSupplierPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(0));
+                 ApiResponse ar = InventreeAPI.addSupplierPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(0));
+                 if(ar.check()){
+                     suppPart = ar.getJson();
+                 }else{
+                    model.setError("Create Supplier Part Error : "+ar.getError());
+                }
+                 
             } catch (AuthenticationException ex) {
                  model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
@@ -746,16 +842,21 @@ public class APIConnector implements ListenerI{
                 status = false;
         }
         if(!jsa.isNull(1)){
-            int manStatus = 0;
+            boolean manStatus =false;
             try {
-                manStatus = InventreeAPI.addManufacturerPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(1));
+                ApiResponse ar =  InventreeAPI.addManufacturerPart(cleanURL(invURL), apiKey, (JSONObject) jsa.get(1));
+                manStatus = ar.check();
+                 if(!ar.check()){
+                    model.setError("Create Manufacturer Part Error : "+ar.getError());
+                    //return;
+                }
             } catch (AuthenticationException ex) {
                  model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
                 model.setConnectionStatus(Boolean.FALSE, CONSTANT.CONN_ERROR);
             }
-            if( manStatus == 0)
-                status = false;
+
+                status = status && manStatus;
         }
         
         if(assignToPart && si.partitem.getId() !=0){
@@ -764,7 +865,11 @@ public class APIConnector implements ListenerI{
             assJSO.put("barcode", si.EAN);
             
             try {
-                Integer statusBC = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                ApiResponse ar  = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                 if(!ar.check()){
+                    model.setError("Assign BC to Part Error : "+ar.getError());
+                    //return;
+                }
             } catch (AuthenticationException ex) {
                  model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
@@ -778,7 +883,11 @@ public class APIConnector implements ListenerI{
             assJSO.put("barcode", si.EAN);
             
             try {
-                Integer statusBC = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                ApiResponse ar  = InventreeAPI.assignBarcode(cleanURL(invURL), apiKey, assJSO);
+                if(!ar.check()){
+                    model.setError("Assign BC to Supplier Error : "+ar.getError());
+                    //return;
+                }
             } catch (AuthenticationException ex) {
                  model.setConnectionStatus(Boolean.FALSE, CONSTANT.AUTH_ERROR);
             } catch (IOException ex) {
