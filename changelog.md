@@ -1,3 +1,7 @@
+# 17-10-2022 / Beta v 0.6.5/6
+  * Bug fix prevent EAN125 decoder from decoding
+  * Add recheck on Unknown Item when a part is created or a link created
+
 # 28-09-2022 / Beta v.0.6.3/4 :
   * API error response handling : now the message of the error is showed up.
   * Internal Barcode processing amelioration
