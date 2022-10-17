@@ -274,6 +274,14 @@ public class Model {
         }
             
     }
+    
+    public void checkFromNewItem(StockItem si){
+        ArrayList<StockItem> siL = ivl.stockList.getListOf(CONSTANT.STATUS_NEW_PART);
+        for (StockItem siT : siL){
+            if(siT.EAN.equals(si.EAN))
+                reCheckStockItem(siT);
+        }
+    }
     /**Called by APIConnector when has update a SI
      * 
      * @param si 
@@ -324,6 +332,9 @@ public class Model {
             return;
         }
         // fin cycle creation
+        /// check if item has same info
+        checkFromNewItem(si);
+        // envoi de l'évent
         e = new SendEvent(this,SendEvent.CREATE_ITEM_SUCESS, si);
         this.dispatchEvent(SendListener.class, e);
         //update du barcode
@@ -351,6 +362,8 @@ public class Model {
             dispatchInfo("Link Part <font style='color:red'>FAILED</font>");
             return;
         }
+        // check des éléments encore iconnus
+        checkFromNewItem(si);
         // fin cycle link
         e = new SendEvent(this,SendEvent.LINK_ITEM_SUCESS, si);
         this.dispatchEvent(SendListener.class, e);
