@@ -361,9 +361,12 @@ public class EAN128Decoder extends BarcodeDecoder {
                 AII info = aiinfo.get(entry.getKey());
 		str = str + "    - Key : " + entry.getKey() + " - " + info.identifier + " Value : " + entry.getValue() + System.lineSeparator();
 	}
-        for (int counter = 0; counter < unknownAI.size(); counter++) { 		      
-            str += "    - Unknown : " + unknownAI.get(counter) + System.lineSeparator();	
-        }   
+        if (this.unknownAI !=null){
+           for (int counter = 0; counter < unknownAI.size(); counter++) { 		      
+            str += "    - Unknown : " + unknownAI.get(counter) + System.lineSeparator();
+           }
+        }
+          
      
         return str;
     }  
