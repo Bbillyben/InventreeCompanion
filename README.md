@@ -163,6 +163,7 @@ Actions :
 
 use Library : 
 [rotatedIcon](https://tips4java.wordpress.com/2009/04/06/rotated-icon/) and [textIcon](https://tips4java.wordpress.com/2009/04/02/text-icon/) by Rob Camick
+[LGoodDatePicker](https://github.com/LGoodDatePicker/LGoodDatePicker/) 
 
 and [TableColumnAdjuster](https://gist.github.com/tarple/dfebce9502b92559dd63) by Tarple.
 
