@@ -1,3 +1,6 @@
+# 28/10/2022 / Beta v0.6.7
+  * Change DatePicker for LGoodDatePicker (previous was a pain)
+
 # 17-10-2022 / Beta v 0.6.5/6
   * Bug fix prevent EAN125 decoder from decoding
   * Add recheck on Unknown Item when a part is created or a link created

@@ -4,27 +4,20 @@
  */
 package view.element.renderer.table;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.Date;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellEditor;
-import net.sourceforge.jdatepicker.JDatePicker;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 /**
  *
  * @author legen
  */
-public class DateTableEditor extends AbstractCellEditor implements TableCellEditor, ChangeListener {
+public class DateTableEditor extends AbstractCellEditor implements TableCellEditor, DateChangeListener {
     private LocalDate currDate;
     
     public DateTableEditor() {
@@ -36,31 +29,30 @@ public class DateTableEditor extends AbstractCellEditor implements TableCellEdit
     }
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        UtilDateModel model = new UtilDateModel();
         if (value != null && value instanceof LocalDate) {
             this.currDate = (LocalDate) value;
            
         }else{
             this.currDate = LocalDate.now();
         }
-         model.setDate(currDate.getYear(), currDate.getMonthValue()-1, currDate.getDayOfMonth());
-         model.setSelected(true);
-        JDatePanelImpl datePanel = new JDatePanelImpl(model);
-        JDatePickerImpl dp = new JDatePickerImpl(datePanel);
+        DatePicker dp = new DatePicker();
+        dp.setPreferredSize(new Dimension(20,15));
         dp.getComponent(0).setPreferredSize(new Dimension(20,15));
         dp.getComponent(1).setPreferredSize(new Dimension(20,15));
-        model.addChangeListener(this);
+        dp.setDate(currDate);
+        dp.addDateChangeListener(this);
         
         return dp;
     }
     @Override
-    public void stateChanged(ChangeEvent e) {
-        UtilDateModel m = (UtilDateModel) e.getSource();
-        Date d = m.getValue();
+    public void dateChanged(DateChangeEvent e) {
+        System.out.println("DateTableEditor.DateChangeEvent() :"+e);
+        DatePicker m = (DatePicker) e.getSource();
+        LocalDate d = m.getDate();
         if(d == null){
             this.currDate = null;
         }else{
-            this.currDate = LocalDate.of(d.getYear()+1900,d.getMonth()+1, d.getDate());
+            this.currDate = d ; //LocalDate.of(d.getYear()+1900,d.getMonth()+1, d.getDate());
         }
         this.fireEditingStopped();
     }

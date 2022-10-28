@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ben.inventreecompanion</groupId>
     <artifactId>InventreeCompanion</artifactId>
-    <version>beta_0.6.6</version>
+    <version>beta_0.6.7</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -242,6 +242,11 @@
             <groupId>net.sourceforge.jdatepicker</groupId>
             <artifactId>jdatepicker</artifactId>
             <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.lgooddatepicker</groupId>
+            <artifactId>LGoodDatePicker</artifactId>
+            <version>11.2.1</version>
         </dependency>
         <!-- FIN JDatePicker -->
         <!-- FOR EXPORT CSV -->
