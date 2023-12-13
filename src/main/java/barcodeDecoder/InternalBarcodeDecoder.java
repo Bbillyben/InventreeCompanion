@@ -17,7 +17,7 @@ import org.json.JSONObject;
  * @author blegendre
  */
 public class InternalBarcodeDecoder extends BarcodeDecoder  {
-    protected static String type="InternalInventreeCommand";
+    protected String type="InternalInventreeCommand";
     protected JSONObject cmd;
     
     protected Set<String> availableCmd = Set.of(
@@ -75,7 +75,7 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     public barcode getBarcode() {
         barcode bc = new barcode();
         bc.code=cmd.toString();
-        bc.type = InternalBarcodeDecoder.type;
+        bc.type = type;
         bc.EAN = CONSTANT.INTERNAL;
         return bc;
     }

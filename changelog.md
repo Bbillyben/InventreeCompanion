@@ -1,3 +1,6 @@
+# 13/12/2023 / Beta v0.8.0
+  * Add GS1 dataMatrix barcode decoder
+
 # 28/10/2022 / Beta v0.6.7
   * Change DatePicker for LGoodDatePicker (previous was a pain)
 

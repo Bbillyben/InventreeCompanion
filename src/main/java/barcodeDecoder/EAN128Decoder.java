@@ -20,19 +20,24 @@ import java.util.regex.Pattern;
  * @author legen
  */
 public class EAN128Decoder extends BarcodeDecoder {
-    private final char defaultBreak = '#';// the default printed caracter break returned by the handscanner (=> to be parametered in the hand scanner)
-    private static final String startCode = "]C1";// the printed ~F1 caracter that start the sequence => maybe handscanner dependant
+    protected char defaultBreak = '#';// the default printed caracter break returned by the handscanner (=> to be parametered in the hand scanner)
     
-    protected static String type = "EAN128";
-    
-    private static final Map<String, AII> aiinfo = Maps.newHashMap();
+    protected Map<String, EAN128Decoder.AII> aiinfo = Maps.newHashMap() ;
+    protected HashMap<String, String[]> equivSearch;
     public List<String> unknownAI;
     
-    private final Map<String, String> data = Maps.newHashMap();
+    protected final Map<String, String> data = Maps.newHashMap();
     
     protected boolean useBCQuantity=false;
     
+    @Override
+    public String type(){
+        return "EAN128";
+    }
     
+    public String startCode(){
+        return "]C1";
+    }
     
     static class AII {
         final int minLength;
@@ -40,15 +45,18 @@ public class EAN128Decoder extends BarcodeDecoder {
         final String identifier;
         final boolean hasBreak;
 
-        public AII(String id, String ident, int minLength, int maxLength, boolean hasbreak) {
-          this.minLength = minLength;
-          this.maxLength = maxLength;
-          this.identifier = ident;
-          this.hasBreak = hasbreak;
+            public AII(String id, String ident, int minLength, int maxLength, boolean hasbreak) {
+              this.minLength = minLength;
+              this.maxLength = maxLength;
+              this.identifier = ident;
+              this.hasBreak = hasbreak;
+        }
     }
-  }
-    
-    static {
+    public EAN128Decoder() {
+        buildEquivSearch();
+        buildInfos();
+    }
+    protected void buildInfos(){
         ai("00", "SerialShippingContainerCode", 2, 18, false);
         ai("01", "EAN-NumberOfTradingUnit", 2, 14, false);
         ai("02", "EAN-NumberOfTheWaresInTheShippingUnit", 2, 14, false);
@@ -155,19 +163,23 @@ public class EAN128Decoder extends BarcodeDecoder {
         ai("90", "InformationForBilateralCoordinatedApplications", 2, 30, true);
       }
     
-    private static HashMap<String, String[]> equivSearch = new HashMap<>(){
-        {
-            put("EAN", new String[]{"01","02"});
-            put("ExpiryDate", new String[]{"17", "12"});
-            put("batch", new String[]{"10", "20"});
-            put("amount", new String[]{"30"});
-        }
-    };
-    private static void ai(String id, String ident, int minLength, int maxLength, boolean hasbreak) {
-        aiinfo.put(id, new AII(id, ident, minLength, maxLength, hasbreak));
+    protected void buildEquivSearch(){
+        equivSearch =  new HashMap<>(){
+            {
+                put("EAN", new String[]{"01","02"});
+                put("ExpiryDate", new String[]{"17", "12"});
+                put("batch", new String[]{"10", "20"});
+                put("amount", new String[]{"30"});
+            }
+        };
     }
-    private static void ai(String id,String ident, int length, boolean hasbreak) {
-        aiinfo.put(id, new AII(id, ident, length, length, hasbreak));
+    protected void ai(String id, String ident, int minLength, int maxLength, boolean hasbreak) {
+        Map<String, AII> tempAI = aiinfo;
+        tempAI.put(id, new AII(id, ident, minLength, maxLength, hasbreak));
+    }
+    protected void ai(String id,String ident, int length, boolean hasbreak) {
+        Map<String, AII> tempAI = aiinfo;
+        tempAI.put(id, new AII(id, ident, length, length, hasbreak));
     }
     
     
@@ -178,11 +190,7 @@ public class EAN128Decoder extends BarcodeDecoder {
         return isSupported(bc.get(0));
     }
     public boolean isSupported(String str){
-        return str.toUpperCase().indexOf(startCode) == 0;
-    }
-    
-    public EAN128Decoder() {
-      
+        return str.toUpperCase().indexOf(this.startCode()) == 0;
     }
     /*public EAN128Decoder(String s) {
         this.decodeBarcode(s, defaultBreak);
@@ -211,21 +219,22 @@ public class EAN128Decoder extends BarcodeDecoder {
        barcode bc = new barcode();
        bc.EAN = getFristAI(equivSearch.get("EAN"));
        bc.code = getBarcodeString();
-       bc.type = EAN128Decoder.type;
+       bc.type = this.type();
        
        return bc;
     }
     @Override
     public void processStockItem(StockItem si) {
+        HashMap<String, String[]> es = equivSearch;
         si.barcode = getBarcode();
-        si.batch = getFristAI(equivSearch.get("batch"));
-        si.expiry_date = transformDateStr(getFristAI(equivSearch.get("ExpiryDate")));
+        si.batch = getFristAI(es.get("batch"));
+        si.expiry_date = transformDateStr(getFristAI(es.get("ExpiryDate")));
         si.EAN = si.barcode.EAN;
-        if(useBCQuantity==true && getFristAI(equivSearch.get("amount"))!=null){
-            si.quantity=Integer.valueOf(getFristAI(equivSearch.get("amount")));
+        if(useBCQuantity==true && es.containsKey("amount") && getFristAI(es.get("amount"))!=null){
+            si.quantity=Integer.valueOf(getFristAI(es.get("amount")));
         }else{
             si.quantity=1;
-        }            
+        }          
     }
     
     
@@ -247,7 +256,7 @@ public class EAN128Decoder extends BarcodeDecoder {
   
     protected void decodeComplex(ArrayList<String> barcodes, char cBreak){
       this.initDecode();
-      String pattern = "(" + startCode + "[^\\]]*)";
+      String pattern = "(" + this.startCode() + "[^\\]]*)";
       Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
       for(String str : barcodes){
          
@@ -265,10 +274,7 @@ public class EAN128Decoder extends BarcodeDecoder {
     }
     
     protected void decodeBC(String s, char fnc1){
-        //System.out.println(" Trying to decode :" + s);
-
-        s = s.replaceFirst("(?i)" + startCode, "");
-        //System.out.println(" decode of :" + s);
+        s = s.replaceFirst("(?i)" + this.startCode(), "");
         StringBuilder ai = new StringBuilder();
         int index = 0;
         while (index < s.length()) {
@@ -296,9 +302,9 @@ public class EAN128Decoder extends BarcodeDecoder {
       }
 
     
-    private void initDecode(){
-      unknownAI = new ArrayList<String>();
-      data.clear();
+    protected void initDecode(){
+        unknownAI = new ArrayList<String>();
+        data.clear();
       
     }
     protected String getFristAI(String[] aStr){
@@ -316,10 +322,10 @@ public class EAN128Decoder extends BarcodeDecoder {
             throw new IllegalArgumentException("Get AI "+ num + " is not referenced in EAN 128 norme");
         return data.get(num);
     }
-    private String recomposeBC(char sep){
+    protected String recomposeBC(char sep){
         if(data.isEmpty())
             return "";
-        String str = startCode;
+        String str = this.startCode();
         for (Map.Entry<String, String> entry : data.entrySet()) {
                     AII info = aiinfo.get(entry.getKey());
                     //System.out.println(" add : "+entry.getKey() + " | "+ entry.getValue() + " | " + info.hasBreak);
@@ -356,7 +362,7 @@ public class EAN128Decoder extends BarcodeDecoder {
     /* la fonction de print */ 
   @Override
     public String toString(){
-        String str = "[GS1Code128Data]" + System.lineSeparator();
+        String str = "["+this.type()+"]" + System.lineSeparator();
         for (Map.Entry<String, String> entry : data.entrySet()) {
                 AII info = aiinfo.get(entry.getKey());
 		str = str + "    - Key : " + entry.getKey() + " - " + info.identifier + " Value : " + entry.getValue() + System.lineSeparator();

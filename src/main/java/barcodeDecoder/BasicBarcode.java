@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author legen
  */
 public class BasicBarcode extends BarcodeDecoder {
-    private static String barcodeStr;
+    protected String barcodeStr;
     protected String type = "BASIC";
     
     @Override

@@ -19,7 +19,7 @@ import org.json.JSONObject;
  * @author legen
  */
 public abstract class BarcodeDecoder {
-    protected static String type;// strig representing type of barcode
+    //protected String type="NONE";// strig representing type of barcode
     
     /**To test wether this decoder is able to handle this barcode
      * 
@@ -40,8 +40,8 @@ public abstract class BarcodeDecoder {
      * 
      * @return 
      */
-    public String getType(){
-        return type;
+    public String type(){
+        return "None";
     }
     /**if is commande, return the command in the appropriate format
      * the command  is dispatche by the keyhandler with a BarcodeEvent, landing in Model.manageCommand method.
