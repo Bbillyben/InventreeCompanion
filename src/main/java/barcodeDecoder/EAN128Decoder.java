@@ -192,12 +192,6 @@ public class EAN128Decoder extends BarcodeDecoder {
     public boolean isSupported(String str){
         return str.toUpperCase().indexOf(this.startCode()) == 0;
     }
-    /*public EAN128Decoder(String s) {
-        this.decodeBarcode(s, defaultBreak);
-    }
-    public EAN128Decoder(String s, char fnc1) {
-        this.decodeBarcode(s, fnc1);
-    }*/
     
     @Override
     public void decodeBarcode(ArrayList<String> s){
@@ -278,7 +272,8 @@ public class EAN128Decoder extends BarcodeDecoder {
         StringBuilder ai = new StringBuilder();
         int index = 0;
         while (index < s.length()) {
-          ai.append(s.charAt(index++));
+          char cc = s.charAt(index++);
+          if(cc != fnc1 )ai.append(cc);
           AII info = aiinfo.get(ai.toString());
           if (info != null) {
             StringBuilder value = new StringBuilder();
