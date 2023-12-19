@@ -19,7 +19,7 @@ import org.json.JSONObject;
  * @author legen
  */
 public abstract class BarcodeDecoder {
-    protected static String type;// strig representing type of barcode
+    //protected String type="NONE";// strig representing type of barcode
     
     /**To test wether this decoder is able to handle this barcode
      * 
@@ -40,8 +40,8 @@ public abstract class BarcodeDecoder {
      * 
      * @return 
      */
-    public String getType(){
-        return type;
+    public String type(){
+        return "None";
     }
     /**if is commande, return the command in the appropriate format
      * the command  is dispatche by the keyhandler with a BarcodeEvent, landing in Model.manageCommand method.
@@ -51,6 +51,7 @@ public abstract class BarcodeDecoder {
     public JSONObject getCommand(){
         return null;
     }
+    
     /**Launch the decoding of the barcode by the decoder
      * To be implemented to store datas for StocItem generation
      * 
@@ -80,6 +81,34 @@ public abstract class BarcodeDecoder {
         return getBarcodeString();
     }
     
+    /**Get the prefix of the barcode if any (first char should be "]")
+     * 
+     * @param bcStr : the barcode string
+     * @param pSize : int - length of the prefix size, default 2
+     * 
+     * @return String prefix, including "]" char
+     */
+    public String getPrefix(String bcStr){
+        return getPrefix(bcStr, 3);
+    }
+    public String getPrefix(String bcStr, int pSize){
+        if (bcStr.charAt(0) != ']')return "";
+        return bcStr.substring(0,pSize);
+    }
+    /**Get the the barcode without prefix if any (first char should be "]")
+     * 
+     * @param bcStr : the barcode string
+     * @param pSize : int - length of the prefix size, default 2
+     * 
+     * @return String prefix, including "]" char
+     */
+    public String removePrefix(String bcStr){
+        return removePrefix(bcStr, 2);
+    }
+    public String removePrefix(String bcStr,  int pSize){
+        if (bcStr.charAt(0) != ']')return bcStr;
+        return bcStr.substring(pSize+1);
+    }
     /**To specify if the keyhandler has to wait before launching the process of barcode decoding
      * 
      * 
@@ -99,6 +128,10 @@ public abstract class BarcodeDecoder {
      * @param si 
      */
     public abstract void processStockItem(StockItem si);
+
+    private char CHR(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
    
 }

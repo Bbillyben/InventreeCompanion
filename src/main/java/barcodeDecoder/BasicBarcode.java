@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author legen
  */
 public class BasicBarcode extends BarcodeDecoder {
-    private static String barcodeStr;
+    protected String barcodeStr;
     protected String type = "BASIC";
     
     @Override
@@ -24,6 +24,7 @@ public class BasicBarcode extends BarcodeDecoder {
     @Override
     public void decodeBarcode(ArrayList<String> bc) {
         barcodeStr = String.join("", bc);
+        barcodeStr = this.removePrefix(barcodeStr);
     }
 
     @Override

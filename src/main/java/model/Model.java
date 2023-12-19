@@ -171,7 +171,6 @@ public class Model {
                 se.export_data=ivl.getExportData();
                 this.dispatchEvent(ExportListener.class, se);
                 return;
-
         }
 
         NavEvent e = new NavEvent(this, NavEvent.NAVIGATE, page);
@@ -563,17 +562,19 @@ public class Model {
      * @param e : an event extend Event
    */
     public void dispatchEvent(Class cl, iEvent e){
-        //System.out.println("Model Dispatch : "+cl+ "/ "+e.type+ "("+e+")");
+//        System.out.println("Model Dispatch : "+cl+ "/ "+e.type+ "("+e+")");
         ListenerI[] listenerList = (ListenerI[]) listeners.getListeners(cl);
         for(ListenerI listener : listenerList){
             listener.eventRecept(e);
         }
     }
     public void dispatchInfo(String info, String InfoType){
+//        System.out.println("Model DispatchInfo : "+info+ "/ "+InfoType);
         InfoEvent e = new InfoEvent(this, InfoType, info);
         this.dispatchEvent(InfoListener.class, e);
     }
     protected void dispatchInfo(String info){
+//        System.out.println("Model DispatchInfo : "+info);
         this.dispatchInfo(info, InfoEvent.INFO_NORM);
     }
 

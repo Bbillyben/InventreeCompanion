@@ -17,7 +17,7 @@ import org.json.JSONObject;
  * @author blegendre
  */
 public class InternalBarcodeDecoder extends BarcodeDecoder  {
-    protected static String type="InternalInventreeCommand";
+    protected String type="InternalInventreeCommand";
     protected JSONObject cmd;
     
     protected Set<String> availableCmd = Set.of(
@@ -40,7 +40,7 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     
     @Override
     public  boolean isSupported(ArrayList<String> bc){ 
-        String bcStr = bc.get(0);
+        String bcStr = this.removePrefix(bc.get(0));
         try {
             JSONObject jso =  new JSONObject(bcStr);
             boolean isAvailable = false;
@@ -62,8 +62,9 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
         if(!isSupported(bc)){
             cmd = null;
         }else{
-            cmd = new JSONObject(bc.get(0));
+            cmd = new JSONObject(this.removePrefix(bc.get(0)));
         }
+
 
     }
     @Override
@@ -75,7 +76,7 @@ public class InternalBarcodeDecoder extends BarcodeDecoder  {
     public barcode getBarcode() {
         barcode bc = new barcode();
         bc.code=cmd.toString();
-        bc.type = InternalBarcodeDecoder.type;
+        bc.type = type;
         bc.EAN = CONSTANT.INTERNAL;
         return bc;
     }

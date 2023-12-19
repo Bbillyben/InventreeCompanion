@@ -3,8 +3,21 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ben.inventreecompanion</groupId>
   <artifactId>InventreeCompanion</artifactId>
-  <version>beta_0.6.7</version>
+  <version>beta_0.8.0</version>
+  <developers>
+    <developer>
+      <id>bbillyben</id>
+      <name>Bbillyben</name>
+      <email>not yet</email>
+    </developer>
+  </developers>
   <build>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

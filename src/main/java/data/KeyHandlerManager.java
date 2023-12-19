@@ -8,6 +8,7 @@ import Inventree.item.StockItem;
 import barcodeDecoder.BarcodeDecoder;
 import barcodeDecoder.BasicBarcode;
 import barcodeDecoder.EAN128Decoder;
+import barcodeDecoder.GS1DataMatrixDecoder;
 import barcodeDecoder.InternalBarcodeDecoder;
 import events.BarcodeEvent;
 import java.awt.Component;
@@ -46,6 +47,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     private static BarcodeDecoder[] DECODERS=new BarcodeDecoder[]{
         new InternalBarcodeDecoder(),// for inventree internal barcode handling
         new EAN128Decoder(), // for EAN128/GS1-128 barcode
+        new GS1DataMatrixDecoder(), // for GS1 matrix 2D barcode
         new BasicBarcode() //DON'T REMOVE, it will set the alphanumeric code scanned as a the whole identifier, without extra processing
     };
     
@@ -107,15 +109,16 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
     /* gestion des barcode */
      private void handleBarcode() {
         // find right decoder
-        BarcodeDecoder decoder = getDecoder(barcodes);
+        BarcodeDecoder decoder = getDecoder(barcodes);        
         if(decoder == null){
             return;
             //throw new Exception("Unknown barcode type : "+barcodeStr);
         }
         
-        System.out.println("KeyHandlerManager / decoder : "+decoder);
+        //System.out.println("KeyHandlerManager / decoder : "+decoder);
         BarcodeEvent ev = new BarcodeEvent(this);
         decoder.decodeBarcode(barcodes, useQuantity);
+        
         if(decoder.isCommand()){// if recognize as a command barcode
            ev.type=BarcodeEvent.BCB_COMMAND;
            ev.command = decoder.getCommand();
