@@ -1,5 +1,6 @@
 # 13/12/2023 / Beta v0.8.0
   * Add GS1 dataMatrix barcode decoder
+  * add about section
 
 # 28/10/2022 / Beta v0.6.7
   * Change DatePicker for LGoodDatePicker (previous was a pain)
@@ -31,4 +32,4 @@
   * Add Changelog!
   * update readme
   * Add Export to CSV
-  * Add Export to Excel (xlsx format)
+  * Add Export to Excel (xlsx format)   

@@ -37,7 +37,7 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author legen
  */
-public class CreatePartDialog extends JDialog implements ActionListener{
+public class CreatePartDialog extends CenterDialog implements ActionListener{
     public static final String NULL_ITEM = "---"; 
     protected InventreeItemFilterCB categoryCB;
     protected JTextField nameTxt;
@@ -292,7 +292,6 @@ public class CreatePartDialog extends JDialog implements ActionListener{
         this.add(jp);
         //this.setSize(600, 250);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        
         
         saveBtn.addActionListener(this);
     }

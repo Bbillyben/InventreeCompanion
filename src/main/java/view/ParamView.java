@@ -54,8 +54,7 @@ public class ParamView extends JPanel implements iView, ActionListener, Listener
         buildView();
     }
     private void buildView(){
-        
-        
+              
         //  -----------------------  Paramètres de Scan
         JLabel labelURL = new JLabel("Second to wait before scan ending if EAN detected : ");
         SpinnerNumberModel secEANMod =new SpinnerNumberModel(CONSTANT.SCAN_SEC_EAN, 0.4,3.0,0.2);

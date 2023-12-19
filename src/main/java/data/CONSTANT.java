@@ -71,6 +71,7 @@ public class CONSTANT {
     public static final String ACTION_EXPORT_CSV = "export_CSV";
     public static final String ACTION_EXPORT_EXCEL = "export_Excel";
     
+    public static final String ACTION_SHOW_ABOUT = "show_about";   
     
     // =================  BARCODE  ================  //
     // ===============================================  //

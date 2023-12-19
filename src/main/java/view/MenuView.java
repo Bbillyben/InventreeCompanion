@@ -7,6 +7,7 @@ package view;
 import controller.MenuController;
 import data.CONSTANT;
 import events.iEvent;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -108,6 +109,17 @@ public class MenuView extends JMenuBar implements ListenerI, ActionListener, iVi
         file.add(expM);
         
         
+        // about button
+        JMenuItem about = new JMenuItem("About") {
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension d1 = super.getPreferredSize();
+                Dimension d2 = super.getMaximumSize();
+                d2.width = d1.width;
+                return d2;
+            }
+        };
+        about.setActionCommand(CONSTANT.ACTION_SHOW_ABOUT);
         
         // ajout
         
@@ -116,6 +128,7 @@ public class MenuView extends JMenuBar implements ListenerI, ActionListener, iVi
         
         this.add(action);
         this.add(file);
+        this.add(about);
         // listener
         param.addActionListener(this);
         scan.addActionListener(this);
@@ -128,6 +141,7 @@ public class MenuView extends JMenuBar implements ListenerI, ActionListener, iVi
         save.addActionListener(this);
         expCSV.addActionListener(this);
         expEXC.addActionListener(this);
+        about.addActionListener(this);
     }
 
     @Override

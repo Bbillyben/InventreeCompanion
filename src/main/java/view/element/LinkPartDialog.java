@@ -32,7 +32,7 @@ import javax.swing.JTextField;
  *
  * @author legen
  */
-public class LinkPartDialog extends JDialog implements ActionListener{
+public class LinkPartDialog extends CenterDialog implements ActionListener{
     public static final String NULL_ITEM = "---"; 
     protected InventreeItemFilterCB subPartCB;
     protected InventreeItemFilterCB SupplierCB;

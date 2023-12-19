@@ -5,7 +5,20 @@
     <artifactId>InventreeCompanion</artifactId>
     <version>beta_0.8.0</version>
     <packaging>jar</packaging>
+    <developers>
+        <developer>
+            <id>bbillyben</id>
+            <name>Bbillyben</name>
+            <email>not yet</email>
+        </developer>
+    </developers>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

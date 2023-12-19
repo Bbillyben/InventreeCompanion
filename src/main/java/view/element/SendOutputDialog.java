@@ -23,7 +23,7 @@ import javax.swing.text.DefaultCaret;
  *
  * @author blegendre
  */
-public class SendOutputDialog extends JDialog {
+public class SendOutputDialog extends CenterDialog {
     
     private boolean allow_closing;
     JTextPane ta;

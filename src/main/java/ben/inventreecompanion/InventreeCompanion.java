@@ -5,6 +5,7 @@
 
 package ben.inventreecompanion;
 
+import controller.AboutController;
 import controller.CreatePartController;
 import controller.ExportController;
 import controller.InfoController;
@@ -21,6 +22,7 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Model;
+import view.AboutDialogView;
 import view.CreatePartView;
 import view.ExportView;
 import view.LoginView;
@@ -108,6 +110,10 @@ public class InventreeCompanion {
         ExportView exV = new ExportView(exC, frame);
         exC.setView(exV);
         
+        // For about Modal
+        AboutController abC = new AboutController(model);
+        AboutDialogView about = new AboutDialogView(frame);
+        abC.setView(about);
         
         // ajout des elements dans la frame
         frame.add(mv, BorderLayout.PAGE_START);
@@ -116,6 +122,8 @@ public class InventreeCompanion {
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        
+        
         
         
         model.setMainFrame(frame);

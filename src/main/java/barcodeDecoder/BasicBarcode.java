@@ -24,6 +24,7 @@ public class BasicBarcode extends BarcodeDecoder {
     @Override
     public void decodeBarcode(ArrayList<String> bc) {
         barcodeStr = String.join("", bc);
+        barcodeStr = this.removePrefix(barcodeStr);
     }
 
     @Override
