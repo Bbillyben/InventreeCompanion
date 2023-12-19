@@ -7,6 +7,7 @@ package data;
 import Inventree.item.StockItem;
 import barcodeDecoder.BarcodeDecoder;
 import barcodeDecoder.BasicBarcode;
+import barcodeDecoder.DataMatrixDecoder;
 import barcodeDecoder.EAN128Decoder;
 import barcodeDecoder.GS1DataMatrixDecoder;
 import barcodeDecoder.InternalBarcodeDecoder;
@@ -48,6 +49,7 @@ public class KeyHandlerManager implements KeyListener, ActionListener {
         new InternalBarcodeDecoder(),// for inventree internal barcode handling
         new EAN128Decoder(), // for EAN128/GS1-128 barcode
         new GS1DataMatrixDecoder(), // for GS1 matrix 2D barcode
+        new DataMatrixDecoder(), //for Data matrix but with strange encoding
         new BasicBarcode() //DON'T REMOVE, it will set the alphanumeric code scanned as a the whole identifier, without extra processing
     };
     

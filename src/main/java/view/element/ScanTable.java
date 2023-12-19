@@ -41,6 +41,7 @@ import view.element.renderer.table.CompanyItemTableEditor;
 import view.element.renderer.table.CompanyItemTableRenderer;
 import view.element.renderer.table.DateTableEditor;
 import view.element.renderer.table.IntegerEditor;
+import view.element.renderer.table.ScanPrefixSimpleCellEditor;
 import view.element.renderer.table.StatusRenderer;
 import view.element.renderer.table.StockLocationTableEditor;
 import view.element.renderer.table.StockLocationTableRenderer;
@@ -119,7 +120,10 @@ public class ScanTable extends JTable implements ActionListener, PopupMenuListen
         
         this.setDefaultEditor(Integer.class, new IntegerEditor());
         
-        
+        if(this.columnExists("batch")){
+//             this.getColumn("batch").setCellRenderer(new ScanPrefixSimpleLabelRenderer());
+             this.getColumn("batch").setCellEditor(new ScanPrefixSimpleCellEditor());
+        }
         if(this.columnExists("Supplier")){
             this.getColumn("Supplier").setCellRenderer(new CompanyItemTableRenderer());
             this.getColumn("Supplier").setCellEditor(new CompanyItemTableEditor(ivl.suppliers));
